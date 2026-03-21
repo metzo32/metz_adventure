@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useTimes } from "@/components/Time";
+import LinkPreset from "../LinkPreset";
 
 export default function Header() {
     const times = useTimes();
@@ -11,10 +12,8 @@ export default function Header() {
             <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
                 {/* 로고 */}
                 <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                        <span className="text-white text-xs font-bold">CM</span>
-                    </div>
-                    <span className="font-bold text-slate-800 text-base">Chiang Mai Journey</span>
+                    <img src="/icons/logo_primary.svg" alt="logo" className="w-8 h-8" />
+                    <span className="font-bold text-slate-800 text-base">떠나세연</span>
                 </div>
 
                 {/* 시간 위젯 */}
@@ -40,12 +39,11 @@ export default function Header() {
                     >
                         로그인
                     </Link>
-                    <Link
+                    <LinkPreset
                         href="/auth/register"
-                        className="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm"
                     >
                         시작하기
-                    </Link>
+                    </LinkPreset>
                 </div>
             </div>
         </header>

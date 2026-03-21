@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useDDay } from "@/components/Time";
+import GradBox from "./GradBox";
 
 export default function HeroSection() {
   const dday = useDDay();
@@ -16,7 +17,7 @@ export default function HeroSection() {
           </div>
           <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-4">
             나만의<br />
-            <span className="text-blue-600">치앙마이 여행</span>을<br />
+            <span className="text-primary">치앙마이 여행</span>을<br />
             스마트하게
           </h1>
           <p className="text-slate-500 text-base mb-8 leading-relaxed">
@@ -26,7 +27,7 @@ export default function HeroSection() {
           <div className="flex items-center gap-3">
             <Link
               href="/auth/register"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all shadow-sm hover:shadow-md"
+              className="bg-primary hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all shadow-sm hover:shadow-md"
             >
               무료로 시작하기 →
             </Link>
@@ -41,7 +42,7 @@ export default function HeroSection() {
 
         {/* D-Day 카드 */}
         <div className="flex flex-col gap-4">
-          <div className="rounded-2xl p-6 text-white shadow-lg" style={{ background: "linear-gradient(to bottom right, var(--primary), var(--light))" }}>
+          <GradBox direction="br" className="rounded-2xl p-6 text-white shadow-lg">
             <div className="flex items-center justify-between mb-5">
               <p className="text-sm font-medium">치앙마이까지</p>
               <span className="bg-white/20 text-white text-xs px-3 py-1 rounded-full font-bold">
@@ -64,7 +65,7 @@ export default function HeroSection() {
               ))}
             </div>
             <p className="text-blue-200 text-xs mt-4">2026년 5월 1일 출발 기준</p>
-          </div>
+          </GradBox>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100">

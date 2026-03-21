@@ -7,9 +7,9 @@ const features = [
     desc: "가고 싶은 곳, 먹고 싶은 것, 하고 싶은 것을 미리 정리하세요.",
     href: "/wishlist",
     iconBg: "bg-blue-50",
-    iconColor: "text-blue-600",
+    iconColor: "text-primary",
     badgeBg: "bg-blue-100",
-    badgeColor: "text-blue-700",
+    badgeColor: "text-primary",
   },
   {
     icon: "✅",
