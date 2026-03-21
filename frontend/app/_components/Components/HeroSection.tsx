@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useDDay } from "@/components/Time";
+import { LinkPreset } from "./LinkPreset";
 import GradBox from "./GradBox";
 
 export default function HeroSection() {
@@ -25,18 +25,17 @@ export default function HeroSection() {
             <br />위시리스트, 투두, 일기, 예산을 깔끔하게.
           </p>
           <div className="flex items-center gap-3">
-            <Link
+            <LinkPreset
               href="/auth/register"
-              className="bg-primary hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all shadow-sm hover:shadow-md"
             >
               무료로 시작하기 →
-            </Link>
-            <Link
+            </LinkPreset>
+            <LinkPreset
               href="/auth/login"
-              className="text-slate-600 hover:text-slate-900 px-6 py-3 rounded-xl font-semibold text-sm border border-slate-200 hover:border-slate-300 transition-all bg-white"
+              mode="light"
             >
               로그인
-            </Link>
+            </LinkPreset>
           </div>
         </div>
 
@@ -74,7 +73,7 @@ export default function HeroSection() {
               <p className="text-blue-500 text-xs mt-2 font-medium">🛫 ICN → CNX</p>
             </div>
             <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-              <p className="text-slate-400 text-xs mb-1">시간대 차이</p>
+              <p className="text-slate-400 text-xs mb-1">시차</p>
               <p className="font-bold text-slate-800 text-sm">−2시간</p>
               <p className="text-amber-500 text-xs mt-2 font-medium">🕐 KST → ICT</p>
             </div>

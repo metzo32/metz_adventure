@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LinkPreset } from "./LinkPreset";
 import GradBox from "./GradBox";
 
 export default function CtaBanner() {
@@ -9,12 +9,12 @@ export default function CtaBanner() {
           <h3 className="text-white font-bold text-xl mb-1">지금 바로 시작하세요</h3>
           <p className="text-blue-100 text-sm">여행까지 남은 시간, 알차게 준비해봐요 🌴</p>
         </div>
-        <Link
+        <LinkPreset
           href="/auth/register"
-          className="bg-white text-primary hover:bg-blue-50 px-6 py-3 rounded-xl font-bold text-sm transition-all whitespace-nowrap shadow-sm"
+          mode="light"
         >
           무료로 시작하기 →
-        </Link>
+        </LinkPreset>
       </GradBox>
     </section>
   );

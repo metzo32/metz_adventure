@@ -1,6 +1,6 @@
-import HeroSection from "./_components/HeroSection";
-import FeatureGrid from "./_components/FeatureGrid";
-import CtaBanner from "./_components/CtaBanner";
+import HeroSection from "./_components/Components/HeroSection";
+import FeatureGrid from "./_components/Components/FeatureGrid";
+import CtaBanner from "./_components/Components/CtaBanner";
 
 export default function LandingPage() {
   return (
