@@ -56,7 +56,7 @@ export function useTimes(): Times {
           second: "2-digit",
         }),
         ict: now.toLocaleTimeString("ko-KR", {
-          timeZone: "Asia/Bangkok",
+          timeZone: "Asia/Bangkok", //TODO 설정 목적지별 시간대 호출
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",

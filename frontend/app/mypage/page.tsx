@@ -1,3 +1,5 @@
+import { PageContainer } from "@/components/PageContainer";
+
 export default function Page() {
-  return <div>마이 페이지</div>;
+  return <PageContainer>마이 페이지</PageContainer>;
 }

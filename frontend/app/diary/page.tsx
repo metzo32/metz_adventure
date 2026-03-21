@@ -1,3 +1,5 @@
+import { PageContainer } from "@/components/PageContainer";
+
 export default function Page() {
-  return <div>일기 목록</div>;
+  return <PageContainer>일기 목록</PageContainer>;
 }

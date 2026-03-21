@@ -1,3 +1,5 @@
+import { PageContainer } from "@/components/PageContainer";
+
 export default function Page() {
-  return <div>장소 상세</div>;
+  return <PageContainer>장소 상세</PageContainer>;
 }
