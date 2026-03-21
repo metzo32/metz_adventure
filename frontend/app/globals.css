@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+/* ── Paperlogy 폰트 정의 ── */
+@font-face {
+  font-family: "Paperlogy-100";
+  src: url("/fonts/Paperlogy-1Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paperlogy-200";
+  src: url("/fonts/Paperlogy-2ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paperlogy-300";
+  src: url("/fonts/Paperlogy-3Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paperlogy-400";
+  src: url("/fonts/Paperlogy-4Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paperlogy-500";
+  src: url("/fonts/Paperlogy-5Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paperlogy-600";
+  src: url("/fonts/Paperlogy-6SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paperlogy-700";
+  src: url("/fonts/Paperlogy-7Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paperlogy-800";
+  src: url("/fonts/Paperlogy-8ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paperlogy-900";
+  src: url("/fonts/Paperlogy-9Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Tailwind v4 테마 등록 ── */
+@theme {
+  --font-paper-100: "Paperlogy-100", sans-serif;
+  --font-paper-200: "Paperlogy-200", sans-serif;
+  --font-paper-300: "Paperlogy-300", sans-serif;
+  --font-paper-400: "Paperlogy-400", sans-serif;
+  --font-paper-500: "Paperlogy-500", sans-serif;
+  --font-paper-600: "Paperlogy-600", sans-serif;
+  --font-paper-700: "Paperlogy-700", sans-serif;
+  --font-paper-800: "Paperlogy-800", sans-serif;
+  --font-paper-900: "Paperlogy-900", sans-serif;
+
+  --color-primary: #3EBC10;
+  --color-light: #3BF660;
+  --color-lighter: #EFF6FF;
+  --color-card: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-text-secondary: #64748B;
+  --color-background: #F1F5F9;
+  --color-foreground: #0F172A;
+}
+
+:root {
+  --background: #F1F5F9;
+  --foreground: #0F172A;
+  --primary: #3EBC10;
+  --light: #3BF660;
+  --lighter: #EFF6FF;
+  --gray-card: #FFFFFF;
+  --gray-border: #E2E8F0;
+  --text-secondary: #64748B;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
