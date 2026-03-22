@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
@@ -27,7 +28,7 @@ export default function Header() {
     const destTimezone = countryInfo?.timezone ?? "Asia/Bangkok";
     const destLabel = currentTrip
         ? (currentTrip.city ? `${currentTrip.city}, ${currentTrip.country}` : currentTrip.country)
-        : "치앙마이";
+        : "온세상";
 
     const times = useTimes(destTimezone);
 
@@ -59,26 +60,25 @@ export default function Header() {
             <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
                 {/* 로고 */}
                 <Link href="/" className="flex items-center gap-2.5">
-                    <img src="/icons/logo_primary.svg" alt="logo" className="w-8 h-8" />
+                    <Image src="/icons/logo_primary.svg" alt="logo" width={32} height={32} priority />
                     <span className="font-bold text-slate-800 text-base">떠나세연</span>
                 </Link>
 
                 {/* 시간 위젯 */}
-                <div className="hidden md:flex items-center gap-5">
+                <div className={`hidden md:flex items-center gap-5 ${!isLoggedIn ? "invisible" : ""}`}>
                     <div className="flex items-center gap-2 text-sm">
                         <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
                         <span className="text-slate-400 text-xs">KST</span>
-                        <span className="font-mono font-semibold text-slate-700 text-sm">{times.kst}</span>
+                        <span className="font-semibold text-slate-700 text-sm">{times.kst}</span>
                     </div>
                     <div className="w-px h-4 bg-slate-200" />
                     <div className="flex items-center gap-2 text-sm">
                         <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
                         <span className="text-slate-400 text-xs">{destLabel}</span>
-                        <span className="font-mono font-semibold text-slate-700 text-sm">{times.dest}</span>
+                        <span className="font-semibold text-slate-700 text-sm">{times.dest}</span>
                     </div>
                 </div>
 
-                {/* 우측: 로그인 전 → 버튼 / 로그인 후 → 여행 선택 드롭다운 */}
                 {isLoggedIn ? (
                     <div className="relative" ref={dropdownRef}>
                         <button
@@ -127,14 +127,11 @@ export default function Header() {
                     </div>
                 ) : (
                     <div className="flex items-center gap-3">
-                        <Link
+                        <LinkPreset
                             href="/auth/login"
-                            className="text-sm text-slate-600 hover:text-slate-900 font-medium transition-colors"
+                            mode="light"
                         >
                             로그인
-                        </Link>
-                        <LinkPreset href="/auth/register">
-                            시작하기
                         </LinkPreset>
                     </div>
                 )}
