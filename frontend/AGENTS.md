@@ -26,6 +26,10 @@ This version has breaking changes — APIs, conventions, and file structure may 
 8. 초기값 / 상수
 9. 기타
 
+# 데이터 페칭 컨벤션
+
+- 서버 데이터 페칭에 `useEffect`를 절대 사용하지 않는다. 반드시 `react-query` (`useQuery`, `useMutation` 등)를 활용한다.
+
 # 코드 작성 컨벤션
 
 - 반복되는 내용(텍스트, 옵션, 탭 등) 및 반복 태그는 별도의 배열로 선언하고 `map`으로 렌더링한다.
@@ -36,3 +40,5 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - 모든 `<button>`은 `components/` 폴더 내 `Button` 프리셋 컴포넌트를 사용한다. 별도 지시가 없으면 스타일은 디폴트(`"full"`)로 적용한다.
 - input 관련 필드의 label은 직접 `<label>` 태그로 작성하지 않는다. 반드시 `*Rhf` 컴포넌트의 `label` prop을 통해 전달한다.
 - React Hook Form의 `Controller`를 컴포넌트 내부에 직접 작성하지 않는다. `components/RHF/` 폴더에 있는 `*Rhf` 프리셋 컴포넌트를 최우선으로 사용한다. 적합한 프리셋이 없는 경우, 임의로 Controller를 작성하지 말고 반드시 개발자에게 다시 질문하여 새 프리셋 생성 여부를 확인한다.
+- `eslint-disable` 주석(`// eslint-disable`, `/* eslint-disable */` 등 모든 형태)을 절대 작성하지 않는다. ESLint 경고가 발생하면 주석으로 억제하지 말고 근본 원인을 해결한다.
+- 인라인 `style` prop(`style={{ ... }}`)을 작성하지 않는다. 모든 스타일은 Tailwind 클래스로 표현한다. Tailwind로 표현이 불가능한 경우에만 개발자에게 확인 후 예외를 허용한다.

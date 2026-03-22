@@ -12,6 +12,8 @@ interface ExchangeRateCardProps {
   rateLoading: boolean;
   rateError: string | null;
   onRefresh: () => void;
+  currencyCode: string;
+  currencyName: string;
 }
 
 export default function ExchangeRateCard({
@@ -19,26 +21,30 @@ export default function ExchangeRateCard({
   rateLoading,
   rateError,
   onRefresh,
+  currencyCode,
+  currencyName,
 }: ExchangeRateCardProps) {
   const [converterInput, setConverterInput] = useState("");
-  const [direction, setDirection] = useState<"thb-to-krw" | "krw-to-thb">("thb-to-krw");
+  const [direction, setDirection] = useState<"dest-to-krw" | "krw-to-dest">("dest-to-krw");
 
   const handleConverterInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setConverterInput(e.target.value);
   };
 
   const handleToggleDirection = () => {
-    setDirection((prev) => (prev === "thb-to-krw" ? "krw-to-thb" : "thb-to-krw"));
+    setDirection((prev) => (prev === "dest-to-krw" ? "krw-to-dest" : "dest-to-krw"));
     setConverterInput("");
   };
 
-  const thbPerKrw = exchangeRate ? 1 / exchangeRate.rate : null;
+  // exchangeRate.rate = 1 KRW 기준 목적지 통화량
+  const destPerKrw = exchangeRate?.rate ?? null;
+  const krwPerDest = destPerKrw ? 1 / destPerKrw : null;
 
   const converterResult =
     converterInput && exchangeRate
-      ? direction === "thb-to-krw"
-        ? Math.round(parseInt(converterInput.replace(/,/g, ""), 10) * (thbPerKrw ?? 0))
-        : Math.round(parseInt(converterInput.replace(/,/g, ""), 10) * exchangeRate.rate)
+      ? direction === "dest-to-krw"
+        ? Math.round(parseInt(converterInput.replace(/,/g, ""), 10) * (krwPerDest ?? 0))
+        : Math.round(parseInt(converterInput.replace(/,/g, ""), 10) * (destPerKrw ?? 0))
       : null;
 
   return (
@@ -46,7 +52,9 @@ export default function ExchangeRateCard({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <CurrencyExchangeIcon className="text-primary" fontSize="small" />
-          <h2 className="text-base font-semibold text-foreground">원화 / 바트 환율</h2>
+          <h2 className="text-base font-semibold text-foreground">
+            원화 / {currencyName} 환율
+          </h2>
         </div>
         <button
           onClick={onRefresh}
@@ -67,13 +75,13 @@ export default function ExchangeRateCard({
       ) : exchangeRate ? (
         <>
           <div className="bg-lighter rounded-xl p-4 mb-3">
-            <p className="text-xs text-text-secondary mb-1">1 THB =</p>
+            <p className="text-xs text-text-secondary mb-1">1 {currencyCode} =</p>
             <p className="text-3xl font-bold text-primary">
-              {thbPerKrw?.toFixed(1)}
+              {krwPerDest?.toFixed(1)}
               <span className="text-base font-medium ml-1">원</span>
             </p>
             <p className="text-xs text-text-secondary mt-1">
-              1 KRW = ฿{exchangeRate.rate.toFixed(4)}
+              1 KRW = {currencyCode} {destPerKrw?.toFixed(4)}
             </p>
           </div>
 
@@ -88,13 +96,17 @@ export default function ExchangeRateCard({
                 className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-lighter text-xs font-medium text-primary hover:bg-slate-200 transition-colors cursor-pointer"
               >
                 <SwapHorizIcon fontSize="small" />
-                {direction === "thb-to-krw" ? "THB → KRW" : "KRW → THB"}
+                {direction === "dest-to-krw"
+                  ? `${currencyCode} → KRW`
+                  : `KRW → ${currencyCode}`}
               </button>
             </div>
             <div className="flex items-center gap-2">
               <div className="flex-1">
                 <label className="text-xs text-text-secondary block mb-1">
-                  {direction === "thb-to-krw" ? "THB (바트)" : "KRW (원)"}
+                  {direction === "dest-to-krw"
+                    ? `${currencyCode} (${currencyName})`
+                    : "KRW (원)"}
                 </label>
                 <InputPreset
                   type="number"
@@ -106,13 +118,15 @@ export default function ExchangeRateCard({
               </div>
               <div className="flex-1">
                 <label className="text-xs text-text-secondary block mb-1">
-                  {direction === "thb-to-krw" ? "KRW (원)" : "THB (바트)"}
+                  {direction === "dest-to-krw"
+                    ? "KRW (원)"
+                    : `${currencyCode} (${currencyName})`}
                 </label>
                 <div className="border border-border rounded-lg px-3 py-2 text-sm bg-lighter text-light font-semibold min-h-[38px]">
                   {converterResult !== null && !isNaN(converterResult)
-                    ? direction === "thb-to-krw"
+                    ? direction === "dest-to-krw"
                       ? `₩${converterResult.toLocaleString()}`
-                      : `฿${converterResult.toLocaleString()}`
+                      : `${converterResult.toLocaleString()} ${currencyCode}`
                     : "–"}
                 </div>
               </div>
