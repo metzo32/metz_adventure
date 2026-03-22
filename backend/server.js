@@ -8,6 +8,8 @@ app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/trips', require('./routes/trips'));
 app.use('/api/wishlist', require('./routes/wishlist'));
 app.use('/api/todos', require('./routes/todos'));
 app.use('/api/diary', require('./routes/diary'));

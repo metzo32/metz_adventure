@@ -2,18 +2,30 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/init');
 
+const requireTrip = (req, res) => {
+  const tripId = req.headers['x-trip-id'];
+  if (!tripId) {
+    res.status(400).json({ error: '여행을 먼저 선택해주세요.' });
+    return null;
+  }
+  return tripId;
+};
+
 router.get('/', (req, res) => {
-  const rows = db.prepare('SELECT * FROM wishlist ORDER BY created_at DESC').all();
+  const tripId = requireTrip(req, res);
+  if (!tripId) return;
+  const rows = db.prepare('SELECT * FROM wishlist WHERE trip_id = ? ORDER BY created_at DESC').all(tripId);
   res.json(rows);
 });
 
 router.post('/', (req, res) => {
+  const tripId = requireTrip(req, res);
+  if (!tripId) return;
   const { title, category, memo, link, priority } = req.body;
   const result = db.prepare(
-    'INSERT INTO wishlist (title, category, memo, link, priority) VALUES (?, ?, ?, ?, ?)'
-  ).run(title, category || '기타', memo || '', link || '', priority || 1);
-  const row = db.prepare('SELECT * FROM wishlist WHERE id = ?').get(result.lastInsertRowid);
-  res.status(201).json(row);
+    'INSERT INTO wishlist (trip_id, title, category, memo, link, priority) VALUES (?, ?, ?, ?, ?, ?)'
+  ).run(tripId, title, category || '기타', memo || '', link || '', priority || 1);
+  res.status(201).json(db.prepare('SELECT * FROM wishlist WHERE id = ?').get(result.lastInsertRowid));
 });
 
 router.patch('/:id', (req, res) => {

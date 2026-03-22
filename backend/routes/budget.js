@@ -2,36 +2,56 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/init');
 
+const requireTrip = (req, res) => {
+  const tripId = req.headers['x-trip-id'];
+  if (!tripId) {
+    res.status(400).json({ error: '여행을 먼저 선택해주세요.' });
+    return null;
+  }
+  return tripId;
+};
+
 router.get('/config', (req, res) => {
-  res.json(db.prepare('SELECT * FROM budget_config').all());
+  const tripId = requireTrip(req, res);
+  if (!tripId) return;
+  res.json(db.prepare('SELECT * FROM budget_config WHERE trip_id = ?').all(tripId));
 });
 
 router.post('/config', (req, res) => {
+  const tripId = requireTrip(req, res);
+  if (!tripId) return;
   const { category, amount, currency } = req.body;
-  db.prepare(
-    'INSERT INTO budget_config (category, amount, currency) VALUES (?,?,?) ON CONFLICT(category) DO UPDATE SET amount=excluded.amount, currency=excluded.currency'
-  ).run(category, amount || 0, currency || 'KRW');
-  res.json(db.prepare('SELECT * FROM budget_config WHERE category = ?').get(category));
+  const existing = db.prepare('SELECT * FROM budget_config WHERE trip_id = ? AND category = ?').get(tripId, category);
+  if (existing) {
+    db.prepare('UPDATE budget_config SET amount=?, currency=? WHERE id=?').run(amount || 0, currency || 'KRW', existing.id);
+  } else {
+    db.prepare('INSERT INTO budget_config (trip_id, category, amount, currency) VALUES (?, ?, ?, ?)').run(tripId, category, amount || 0, currency || 'KRW');
+  }
+  res.json(db.prepare('SELECT * FROM budget_config WHERE trip_id = ? AND category = ?').get(tripId, category));
 });
 
 router.get('/expenses', (req, res) => {
-  res.json(db.prepare('SELECT * FROM expenses ORDER BY date DESC, created_at DESC').all());
+  const tripId = requireTrip(req, res);
+  if (!tripId) return;
+  res.json(db.prepare('SELECT * FROM expenses WHERE trip_id = ? ORDER BY date DESC, created_at DESC').all(tripId));
 });
 
 router.post('/expenses', (req, res) => {
-  const { date, category, amount_thb, memo } = req.body;
+  const tripId = requireTrip(req, res);
+  if (!tripId) return;
+  const { date, category, amount_thb, amount_krw, memo } = req.body;
   const result = db.prepare(
-    'INSERT INTO expenses (date, category, amount_thb, memo) VALUES (?,?,?,?)'
-  ).run(date, category || '기타', amount_thb || 0, memo || '');
+    'INSERT INTO expenses (trip_id, date, category, amount_thb, amount_krw, memo) VALUES (?,?,?,?,?,?)'
+  ).run(tripId, date, category || '기타', amount_thb || 0, amount_krw || 0, memo || '');
   res.status(201).json(db.prepare('SELECT * FROM expenses WHERE id = ?').get(result.lastInsertRowid));
 });
 
 router.put('/expenses/:id', (req, res) => {
-  const { date, category, amount_thb, memo } = req.body;
+  const { date, category, amount_thb, amount_krw, memo } = req.body;
   const e = db.prepare('SELECT * FROM expenses WHERE id = ?').get(req.params.id);
   if (!e) return res.status(404).json({ error: '지출을 찾을 수 없습니다.' });
-  db.prepare('UPDATE expenses SET date=?,category=?,amount_thb=?,memo=? WHERE id=?')
-    .run(date??e.date, category??e.category, amount_thb??e.amount_thb, memo??e.memo, req.params.id);
+  db.prepare('UPDATE expenses SET date=?,category=?,amount_thb=?,amount_krw=?,memo=? WHERE id=?')
+    .run(date ?? e.date, category ?? e.category, amount_thb ?? e.amount_thb, amount_krw ?? e.amount_krw, memo ?? e.memo, req.params.id);
   res.json(db.prepare('SELECT * FROM expenses WHERE id = ?').get(req.params.id));
 });
 
