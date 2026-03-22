@@ -49,12 +49,12 @@ export const InviteCodeModal = ({ open, onClose, trip }: Props) => {
       onClose={handleClose}
       onConfirm={handleClose}
       title="초대 코드"
-      confirmButton="닫기"
+      // confirmButton="닫기"
       content={
         <div className="flex flex-col gap-4">
           <p className="text-sm text-text-secondary">
             <span className="font-medium text-foreground">{trip.name}</span>에 초대할 코드를
-            생성하세요. 코드는 24시간 동안 유효합니다.
+            생성합니다. <br /> 코드는 24시간 동안 유효합니다.
           </p>
 
           {inviteCode ? (

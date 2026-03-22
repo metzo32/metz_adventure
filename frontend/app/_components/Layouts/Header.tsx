@@ -14,7 +14,7 @@ import { useTrip } from "@/app/contexts/TripContext";
 import { fetchMyTrips } from "@/app/api/trips";
 import { COUNTRIES } from "@/app/trips/data/constants";
 import type { Trip } from "@/app/trips/types";
-
+import logo from "@/public/icons/logo_primary.svg"
 export default function Header() {
     const { data: session } = useSession();
     const userId = (session?.user as { id?: string })?.id ?? "";
@@ -60,7 +60,7 @@ export default function Header() {
             <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
                 {/* 로고 */}
                 <Link href="/" className="flex items-center gap-2.5">
-                    <Image src="/icons/logo_primary.svg" alt="logo" width={32} height={32} priority />
+                    <Image src={logo} alt="logo" width={20} height={20} priority />
                     <span className="font-bold text-slate-800 text-base">떠나세연</span>
                 </Link>
 
@@ -71,12 +71,16 @@ export default function Header() {
                         <span className="text-slate-400 text-xs">KST</span>
                         <span className="font-semibold text-slate-700 text-sm">{times.kst}</span>
                     </div>
-                    <div className="w-px h-4 bg-slate-200" />
-                    <div className="flex items-center gap-2 text-sm">
-                        <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
-                        <span className="text-slate-400 text-xs">{destLabel}</span>
-                        <span className="font-semibold text-slate-700 text-sm">{times.dest}</span>
-                    </div>
+                    {currentTrip && (
+                        <>
+                            <div className="w-px h-4 bg-slate-200" />
+                            <div className="flex items-center gap-2 text-sm">
+                                <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
+                                <span className="text-slate-400 text-xs">{destLabel}</span>
+                                <span className="font-semibold text-slate-700 text-sm">{times.dest}</span>
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 {isLoggedIn ? (

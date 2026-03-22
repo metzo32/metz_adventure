@@ -45,27 +45,27 @@ const TodoList = ({ selectedDate, items, allItems, onItemClick, onAddClick, onTo
               ? dayjs(selectedDate).format('M월 D일 (ddd)')
               : '날짜를 선택하세요'}
           </h2>
-          {selectedDate && (
+          {/* {selectedDate && (
             <p className="text-sm text-text-secondary mt-0.5">
               {sorted.length > 0 ? `${sorted.length}개의 일정` : '등록된 일정이 없습니다.'}
             </p>
-          )}
+          )} */}
         </div>
 
-        <Button onClick={onAddClick}>
+        {/* <Button onClick={onAddClick}>
           <Add sx={{ fontSize: 18 }} />
           일정 추가
-        </Button>
+        </Button> */}
       </div>
 
       {/* Selected date items */}
       {selectedDate && (
         <div className="flex flex-col gap-3">
           {sorted.length === 0 ? (
-            <div className="bg-card rounded-2xl border border-border p-8 text-center">
+            <div className="flex flex-col items-center gap-4 bg-card rounded-2xl border border-border p-8 text-center">
               <p className="text-text-secondary text-sm">이 날 등록된 일정이 없습니다.</p>
-              <Button onClick={onAddClick}>
-                + 일정 추가하기
+              <Button onClick={onAddClick} className='w-fit flex items-center gap-1'>
+                <Add sx={{ fontSize: 18 }} /> 일정 추가하기
               </Button>
             </div>
           ) : (
@@ -157,7 +157,7 @@ const TodoList = ({ selectedDate, items, allItems, onItemClick, onAddClick, onTo
       )}
 
       {!selectedDate && (
-        <div className="bg-lighter rounded-2xl p-6 text-center border border-border border-dashed">
+        <div className="bg-white flex flex-col rounded-2xl p-6 text-center border border-border border-dashed">
           <p className="text-text-secondary text-sm">좌측 달력에서 날짜를 선택하면</p>
           <p className="text-text-secondary text-sm">해당 날짜의 일정을 확인할 수 있습니다.</p>
         </div>

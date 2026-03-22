@@ -201,8 +201,7 @@ export default function BudgetPage() {
 
   return (
     <PageContainer>
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-6">
+      <div className="mb-6">
           <h1 className="text-2xl font-bold text-foreground">예산 관리</h1>
           <p className="text-text-secondary text-sm mt-1">온세상 여행 예산을 한눈에 확인하세요</p>
         </div>
@@ -241,7 +240,6 @@ export default function BudgetPage() {
             />
           </div>
         </div>
-      </div>
 
       {showBudgetModal && (
         <SetBudgetModal

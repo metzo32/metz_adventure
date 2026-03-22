@@ -99,9 +99,9 @@ export const TripCard = ({ trip }: Props) => {
               현재 여행
             </div>
           )}
-          <Button onClick={handleInviteOpen} mode="light">
+          <Button onClick={handleInviteOpen} mode="light" className="flex items-center gap-2">
             <ShareIcon sx={{ fontSize: 16 }} />
-            초대
+            <span>초대</span>
           </Button>
         </div>
       </div>

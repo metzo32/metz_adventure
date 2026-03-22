@@ -98,7 +98,7 @@ const PlacesPage = () => {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="text-center text-text-secondary py-24 text-sm">
+        <div className="bg-white rounded-2xl text-center text-text-secondary py-24 text-sm">
           등록된 장소가 없습니다.
         </div>
       ) : (

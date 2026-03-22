@@ -10,7 +10,7 @@ const BUDGET_CARDS = [
     title: "총 여행 예산",
     key: "total" as const,
     Icon: AccountBalanceWalletIcon,
-    bg: "bg-primary",
+    bg: "bg-primary hover:bg-blue-900 transition",
     text: "text-white",
     sub: "text-blue-200",
   },

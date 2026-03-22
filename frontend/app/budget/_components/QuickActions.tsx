@@ -28,13 +28,13 @@ export default function QuickActions({ onAction }: QuickActionsProps) {
           onClick={makeHandleAction(onAction, key)}
           className={`flex flex-col items-center gap-2 py-4 rounded-2xl font-medium text-sm transition-all shadow-sm cursor-pointer
             ${primary
-              ? "bg-[#0832A4] text-white hover:bg-blue-900"
-              : "bg-white text-[#0F172A] hover:bg-slate-50"
+              ? "bg-primary text-white hover:bg-blue-900"
+              : "bg-white text-foreground hover:bg-slate-50"
             }`}
         >
-          <div className={`p-2 rounded-full ${primary ? "bg-white/20" : "bg-[#EFF6FF]"}`}>
+          <div className={`p-2 rounded-full ${primary ? "bg-white/20" : "bg-lighter"}`}>
             <Icon
-              className={primary ? "text-white" : "text-[#0832A4]"}
+              className={primary ? "text-white" : "text-pribg-primary"}
               fontSize="small"
             />
           </div>

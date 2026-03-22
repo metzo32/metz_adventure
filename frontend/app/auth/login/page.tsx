@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/Button";
 import { InputRhf } from "@/components/RHF/InputRhf";
+
+const SAVED_EMAIL_KEY = "savedEmail";
 
 type LoginForm = {
   email: string;
@@ -15,12 +18,23 @@ type LoginForm = {
 
 const Page = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [errorMsg, setErrorMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [rememberEmail, setRememberEmail] = useState(
+    () => typeof window !== "undefined" && !!localStorage.getItem(SAVED_EMAIL_KEY)
+  );
 
-  const { control, handleSubmit } = useForm<LoginForm>({
+  const { control, handleSubmit, setValue } = useForm<LoginForm>({
     defaultValues: { email: "", password: "" },
   });
+
+  useEffect(() => {
+    const saved = localStorage.getItem(SAVED_EMAIL_KEY);
+    if (saved) {
+      setValue("email", saved);
+    }
+  }, [setValue]);
 
   const onLogin = async (data: LoginForm) => {
     setIsLoading(true);
@@ -39,10 +53,22 @@ const Page = () => {
       return;
     }
 
-    router.push("/places");
+    if (rememberEmail) {
+      localStorage.setItem(SAVED_EMAIL_KEY, data.email);
+    } else {
+      localStorage.removeItem(SAVED_EMAIL_KEY);
+    }
+
+    queryClient.clear();
+    localStorage.removeItem("currentTrip");
+    router.push("/");
   };
 
   const handleFormSubmit = handleSubmit(onLogin);
+
+  const handleRememberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRememberEmail(e.target.checked);
+  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center -mt-18 px-4">
@@ -72,6 +98,16 @@ const Page = () => {
               placeholder="비밀번호를 입력해주세요."
               rules={{ required: "비밀번호를 입력해주세요." }}
             />
+
+            <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={rememberEmail}
+                onChange={handleRememberChange}
+                className="w-4 h-4 accent-primary"
+              />
+              이메일 기억하기
+            </label>
 
             {errorMsg && (
               <p className="text-red-500 text-xs">{errorMsg}</p>

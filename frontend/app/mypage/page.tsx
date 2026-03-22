@@ -47,9 +47,11 @@ const MyPage = () => {
           {isLoading ? (
             <p className="text-text-secondary text-sm text-center py-8">불러오는 중...</p>
           ) : pastTrips.length === 0 ? (
-            <p className="text-text-secondary text-sm text-center py-8">
-              아직 종료된 여행이 없어요.
-            </p>
+            <div className="bg-white rounded-2xl text-center text-text-secondary py-24 text-sm">
+              <p className="text-text-secondary text-sm text-center py-8">
+                아직 종료된 여행이 없어요.
+              </p>
+            </div>
           ) : (
             <div className="flex flex-col gap-4">
               {pastTrips.map((trip) => (

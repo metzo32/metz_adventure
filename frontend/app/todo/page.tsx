@@ -125,7 +125,7 @@ const TodoPage = () => {
     <PageContainer>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground">여행 일정</h1>
-        <p className="text-sm text-text-secondary mt-1">온세상 방문 장소와 일정을 관리하세요</p>
+        <p className="text-sm text-text-secondary mt-1">방문 장소와 일정을 관리하세요.</p>
       </div>
 
       <div className="grid grid-cols-3 gap-3 mb-6">
@@ -147,7 +147,7 @@ const TodoPage = () => {
             onDateSelect={handleDateSelect}
           />
 
-          <div className="mt-4 bg-card rounded-2xl border border-border p-4">
+          {/* <div className="mt-4 bg-card rounded-2xl border border-border p-4">
             <p className="text-xs font-semibold text-text-secondary mb-2">
               {currentMonth.format('M월')} 일정 요약
             </p>
@@ -172,7 +172,7 @@ const TodoPage = () => {
                 )}
               </div>
             )}
-          </div>
+          </div> */}
         </div>
 
         <div className="flex-1">
