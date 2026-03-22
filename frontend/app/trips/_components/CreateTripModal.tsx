@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { Modal } from "@/components/Modal";
@@ -36,6 +36,12 @@ export const CreateTripModal = ({ open, onClose }: Props) => {
     defaultValues: { name: "", description: "", country: "", city: "", start_date: "", end_date: "" },
   });
 
+  const startDate = useWatch({ control, name: "start_date" });
+  const endDate = useWatch({ control, name: "end_date" });
+
+  const isStartDisabled = (dateStr: string) => !!endDate && dateStr > endDate;
+  const isEndDisabled = (dateStr: string) => !!startDate && dateStr < startDate;
+
   const { mutate, isPending, error } = useMutation({
     mutationFn: (data: CreateTripForm) => createTrip(userId, data),
     onSuccess: (newTrip) => {
@@ -68,7 +74,6 @@ export const CreateTripModal = ({ open, onClose }: Props) => {
             control={control}
             name="name"
             label="여행 이름"
-            placeholder="예) 온세상 여행 2025"
             maxLength={20}
             rules={{ required: "여행 이름을 입력해주세요." }}
           />
@@ -101,12 +106,14 @@ export const CreateTripModal = ({ open, onClose }: Props) => {
               name="start_date"
               label="여행 시작일"
               placeholder="시작일 선택"
+              disabledDate={isStartDisabled}
             />
             <DatePickerRhf
               control={control}
               name="end_date"
               label="여행 종료일"
               placeholder="종료일 선택"
+              disabledDate={isEndDisabled}
             />
           </div>
           {error && (

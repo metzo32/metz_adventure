@@ -14,7 +14,7 @@ interface Props {
   onDateSelect: (date: string) => void;
 }
 
-const WEEKDAYS = ['월', '화', '수', '목', '금', '토', '일'];
+const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 const TodoCalendar = ({ currentMonth, selectedDate, itemDates, onMonthChange, onDateSelect }: Props) => {
   const today = dayjs().format('YYYY-MM-DD');
@@ -22,8 +22,8 @@ const TodoCalendar = ({ currentMonth, selectedDate, itemDates, onMonthChange, on
   const startOfMonth = currentMonth.startOf('month');
   const endOfMonth = currentMonth.endOf('month');
 
-  // 0=Sun ... 6=Sat → convert to Mon-first: Mon=0 ... Sun=6
-  const startDow = (startOfMonth.day() + 6) % 7;
+  // 0=Sun ... 6=Sat → Sun-first: Sun=0 ... Sat=6
+  const startDow = startOfMonth.day();
   const daysInMonth = endOfMonth.date();
 
   const calendarCells: (number | null)[] = [
@@ -64,8 +64,14 @@ const TodoCalendar = ({ currentMonth, selectedDate, itemDates, onMonthChange, on
 
       {/* Weekday headers */}
       <div className="grid grid-cols-7 mb-1">
-        {WEEKDAYS.map((day) => (
-          <div key={day} className="text-center text-xs font-medium text-text-secondary py-1">
+        {WEEKDAYS.map((day, i) => (
+          <div
+            key={day}
+            className={[
+              'text-center text-xs font-medium py-1',
+              i === 0 ? 'text-red-500' : 'text-text-secondary',
+            ].join(' ')}
+          >
             {day}
           </div>
         ))}
@@ -83,7 +89,7 @@ const TodoCalendar = ({ currentMonth, selectedDate, itemDates, onMonthChange, on
           const isToday = today === dateStr;
           const hasItems = itemDates.includes(dateStr);
           const isSat = idx % 7 === 6;
-          const isSun = false; // Mon-first: col0=Mon, col6=Sun
+          const isSun = idx % 7 === 0;
 
           return (
             <button
@@ -98,6 +104,7 @@ const TodoCalendar = ({ currentMonth, selectedDate, itemDates, onMonthChange, on
                   isToday && !isSelected ? 'border border-primary text-primary font-semibold' : '',
                   !isSelected && !isToday ? 'text-foreground hover:bg-lighter' : '',
                   isSat && !isSelected ? 'text-blue-400' : '',
+                  isSun && !isSelected ? 'text-red-500' : '',
                 ].join(' ')}
               >
                 {day}
