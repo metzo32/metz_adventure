@@ -95,6 +95,24 @@ try { db.exec('ALTER TABLE trips ADD COLUMN country TEXT DEFAULT ""'); } catch {
 try { db.exec('ALTER TABLE trips ADD COLUMN city TEXT DEFAULT ""'); } catch {}
 try { db.exec('ALTER TABLE trips ADD COLUMN start_date TEXT DEFAULT ""'); } catch {}
 try { db.exec('ALTER TABLE trips ADD COLUMN end_date TEXT DEFAULT ""'); } catch {}
+try { db.exec('ALTER TABLE trips ADD COLUMN total_budget_krw INTEGER DEFAULT NULL'); } catch {}
+try { db.exec("ALTER TABLE trips ADD COLUMN memo TEXT DEFAULT ''"); } catch {}
+try { db.exec('ALTER TABLE steps ADD COLUMN trip_id INTEGER'); } catch {}
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS flights (
+      id               INTEGER PRIMARY KEY AUTOINCREMENT,
+      trip_id          INTEGER NOT NULL,
+      type             TEXT    NOT NULL CHECK(type IN ('outbound','return')),
+      departure_place  TEXT    NOT NULL,
+      departure_time   TEXT    NOT NULL,
+      arrival_place    TEXT    NOT NULL,
+      arrival_time     TEXT    NOT NULL,
+      created_at       DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (trip_id) REFERENCES trips(id)
+    )
+  `);
+} catch {}
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS trips (
