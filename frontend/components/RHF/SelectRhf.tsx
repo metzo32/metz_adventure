@@ -7,7 +7,7 @@ interface SelectRhfProps {
   name: string;
   label?: string;
   placeholder?: string;
-  options?: { label: string; value: string | number }[];
+  options?: { label: string; value: string | number; [key: string]: unknown }[];
   disabled?: boolean;
   rules?: RegisterOptions;
   defaultValue?: string;

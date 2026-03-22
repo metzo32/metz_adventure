@@ -1,20 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FilterPanel } from "./_components/FilterPanel";
 import { WishlistTable } from "./_components/WishlistTable";
 import { fetchItems } from "@/app/api/wishlist";
-import type { WishItem } from "./types";
+import { PageContainer } from "@/components/PageContainer";
+import { NoTripSelected } from "@/components/NoTripSelected";
+import { useTrip } from "@/app/contexts/TripContext";
 
 const WishlistPage = () => {
-  const [serverItems, setServerItems] = useState<WishItem[]>([]);
+  const queryClient = useQueryClient();
+  const { currentTrip } = useTrip();
+
+  const { data: serverItems = [] } = useQuery({
+    queryKey: ["wishlist", currentTrip?.id],
+    queryFn: () => fetchItems(currentTrip!.id),
+    enabled: !!currentTrip,
+  });
+
   const [filterCategory, setFilterCategory] = useState("전체");
   const [filterStatus, setFilterStatus] = useState<"전체" | "완료" | "미완료">("전체");
   const [addCount, setAddCount] = useState(0);
-
-  useEffect(() => {
-    fetchItems().then(setServerItems).catch(console.error);
-  }, []);
 
   const filtered = serverItems.filter((it) => {
     if (filterCategory !== "전체" && it.category !== filterCategory) return false;
@@ -23,6 +30,8 @@ const WishlistPage = () => {
     return true;
   });
 
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["wishlist", currentTrip?.id] });
+
   const handleFilterChange = (category: string, status: "전체" | "완료" | "미완료") => {
     setFilterCategory(category);
     setFilterStatus(status);
@@ -30,31 +39,35 @@ const WishlistPage = () => {
   const handleAddNew = () => setAddCount((c) => c + 1);
   const handleCloseAdd = () => setAddCount(0);
 
-  const handleAdd = (item: WishItem) => setServerItems((prev) => [item, ...prev]);
-  const handleUpdate = (updated: WishItem) =>
-    setServerItems((prev) => prev.map((it) => (it.id === updated.id ? updated : it)));
-  const handleDelete = (id: number) =>
-    setServerItems((prev) => prev.filter((it) => it.id !== id));
+  const handleAdd = invalidate;
+  const handleUpdate = invalidate;
+  const handleDelete = invalidate;
 
   return (
-    <div className="min-h-screen bg-background px-8 py-8 font-sans overflow-hidden">
+    <PageContainer>
       <h1 className="text-2xl font-bold text-foreground mb-6">위시리스트</h1>
 
-      <FilterPanel
-        filteredCount={filtered.length}
-        onFilterChange={handleFilterChange}
-        onAddNew={handleAddNew}
-      />
-
-      <WishlistTable
-        filtered={filtered}
-        addCount={addCount}
-        onCloseAdd={handleCloseAdd}
-        onAdd={handleAdd}
-        onUpdate={handleUpdate}
-        onDelete={handleDelete}
-      />
-    </div>
+      {!currentTrip ? (
+        <NoTripSelected />
+      ) : (
+        <>
+          <FilterPanel
+            filteredCount={filtered.length}
+            onFilterChange={handleFilterChange}
+            onAddNew={handleAddNew}
+          />
+          <WishlistTable
+            tripId={currentTrip.id}
+            filtered={filtered}
+            addCount={addCount}
+            onCloseAdd={handleCloseAdd}
+            onAdd={handleAdd}
+            onUpdate={handleUpdate}
+            onDelete={handleDelete}
+          />
+        </>
+      )}
+    </PageContainer>
   );
 };
 

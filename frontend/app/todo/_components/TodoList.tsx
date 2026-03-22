@@ -47,10 +47,11 @@ const TodoList = ({ selectedDate, items, allItems, onItemClick, onAddClick, onTo
           </h2>
           {selectedDate && (
             <p className="text-sm text-text-secondary mt-0.5">
-              {sorted.length > 0 ? `${sorted.length}개의 일정` : '등록된 일정이 없습니다'}
+              {sorted.length > 0 ? `${sorted.length}개의 일정` : '등록된 일정이 없습니다.'}
             </p>
           )}
         </div>
+
         <Button onClick={onAddClick}>
           <Add sx={{ fontSize: 18 }} />
           일정 추가

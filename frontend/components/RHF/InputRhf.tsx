@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Controller, type Control, type RegisterOptions } from "react-hook-form";
 
 const onlyNumbersRegex = /[^0-9]/g;
@@ -10,7 +9,7 @@ interface InputRhfProps {
   control: Control<any>;
   name: string;
   label?: string;
-  type?: "text" | "date" | "time";
+  type?: "text" | "date" | "time" | "password";
   mode?: "text" | "currency" | "phone";
   placeholder?: string;
   className?: string;
@@ -46,14 +45,11 @@ export const InputRhf = ({
   onBlur,
   onKeyDown,
 }: InputRhfProps) => {
-  const [isComposing, setIsComposing] = useState(false);
-
   return (
     <Controller
       control={control}
       name={name}
       rules={rules}
-      defaultValue=""
       render={({ field, fieldState }) => {
         const sanitize = (raw: string) => {
           if (mode === "currency") {
@@ -83,12 +79,11 @@ export const InputRhf = ({
         })();
 
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-          if (type === "date" || type === "time") {
+          if (type === "date" || type === "time" || type === "password") {
             field.onChange(e.target.value);
             onChange?.(e.target.value);
             return;
           }
-          if (isComposing) return;
           const formatted = sanitize(e.target.value);
 
           if (mode === "currency") {
@@ -99,15 +94,6 @@ export const InputRhf = ({
             field.onChange(formatted);
             onChange?.(formatted);
           }
-        };
-
-        const handleCompositionStart = () => setIsComposing(true);
-
-        const handleCompositionEnd = (e: React.CompositionEvent<HTMLInputElement>) => {
-          setIsComposing(false);
-          const formatted = sanitize(e.currentTarget.value);
-          field.onChange(formatted);
-          onChange?.(formatted);
         };
 
         const handleBlur = () => {
@@ -136,8 +122,6 @@ export const InputRhf = ({
                 readOnly={readOnly}
                 value={displayValue}
                 onChange={handleChange}
-                onCompositionStart={handleCompositionStart}
-                onCompositionEnd={handleCompositionEnd}
                 onBlur={handleBlur}
                 onKeyDown={onKeyDown}
                 className={`${BASE_CLASS} ${mode === "currency" ? "text-right" : ""} ${disabled ? "bg-slate-100 text-text-secondary cursor-not-allowed" : ""}`}

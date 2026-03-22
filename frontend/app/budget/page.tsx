@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Transaction, ExchangeRateData, AddExpenseForm } from "./types";
-import {
-  TOTAL_BUDGET_KRW,
-  INITIAL_TRANSACTIONS,
-  INITIAL_CATEGORY_STATS,
-} from "./data";
-import { fetchExchangeRate } from "../api/budget";
+import { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTrip } from "@/app/contexts/TripContext";
+import { fetchExpenses, createExpense, deleteExpense, fetchExchangeRate } from "../api/budget";
+import { TOTAL_BUDGET_KRW, CATEGORIES, CATEGORY_COLORS } from "./data";
+import type { AddExpenseForm } from "./types";
 import BudgetSummaryCards from "./_components/BudgetSummaryCards";
 import QuickActions from "./_components/QuickActions";
 import TransactionTable from "./_components/TransactionTable";
@@ -15,6 +13,8 @@ import ExchangeRateCard from "./_components/ExchangeRateCard";
 import CategoryStats from "./_components/CategoryStats";
 import AddExpenseModal from "./_components/AddExpenseModal";
 import { PageContainer } from "@/components/PageContainer";
+import { NoTripSelected } from "@/components/NoTripSelected";
+import { COUNTRIES } from "@/app/trips/data/constants";
 
 const DEFAULT_FORM: AddExpenseForm = {
   category: "식비",
@@ -23,63 +23,70 @@ const DEFAULT_FORM: AddExpenseForm = {
 };
 
 export default function BudgetPage() {
-  const [transactions, setTransactions] = useState<Transaction[]>(INITIAL_TRANSACTIONS);
-  const [exchangeRate, setExchangeRate] = useState<ExchangeRateData | null>(null);
-  const [rateLoading, setRateLoading] = useState(true);
-  const [rateError, setRateError] = useState<string | null>(null);
+  const { currentTrip } = useTrip();
+  const tripId = currentTrip?.id;
+  const queryClient = useQueryClient();
+
+  const { data: transactions = [] } = useQuery({
+    queryKey: ["expenses", tripId],
+    queryFn: () => fetchExpenses(tripId!),
+    enabled: !!tripId,
+  });
+
+  const countryInfo = COUNTRIES.find((c) => c.value === currentTrip?.country);
+  const currencyCode = countryInfo?.currency ?? "THB";
+  const currencyName = countryInfo?.currencyName ?? "바트";
+
+  const { data: exchangeRate, isLoading: rateLoading, error: rateError, refetch: refetchRate } = useQuery({
+    queryKey: ["exchangeRate", currencyCode],
+    queryFn: () => fetchExchangeRate(currencyCode),
+    staleTime: 1000 * 60 * 60,
+  });
+
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["expenses", tripId] });
+
+  const createMutation = useMutation({
+    mutationFn: (data: Parameters<typeof createExpense>[1]) => createExpense(tripId!, data),
+    onSuccess: invalidate,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteExpense,
+    onSuccess: invalidate,
+  });
+
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState<AddExpenseForm>(DEFAULT_FORM);
-  const [nextId, setNextId] = useState(INITIAL_TRANSACTIONS.length + 1);
 
-  const totalSpent = transactions
-    .filter((t) => t.status === "완료")
-    .reduce((sum, t) => sum + t.amountKRW, 0);
+  const totalSpent = useMemo(
+    () => transactions.filter((t) => t.status === "완료").reduce((sum, t) => sum + t.amountKRW, 0),
+    [transactions]
+  );
   const remaining = TOTAL_BUDGET_KRW - totalSpent;
   const spentPercent = Math.min((totalSpent / TOTAL_BUDGET_KRW) * 100, 100);
 
-  const categoryStats = INITIAL_CATEGORY_STATS.map((stat) => ({
-    ...stat,
-    amountKRW:
-      transactions
-        .filter((t) => t.category === stat.name && t.status === "완료")
-        .reduce((sum, t) => sum + t.amountKRW, 0) || stat.amountKRW,
-  }));
+  const categoryStats = useMemo(
+    () =>
+      CATEGORIES.map((name) => ({
+        name,
+        color: CATEGORY_COLORS[name] ?? "#6B7280",
+        amountKRW: transactions
+          .filter((t) => t.category === name && t.status === "완료")
+          .reduce((sum, t) => sum + t.amountKRW, 0),
+      })),
+    [transactions]
+  );
 
-  const budgetValues: Record<string, number> = {
-    total: TOTAL_BUDGET_KRW,
-    spent: totalSpent,
-    remaining,
-  };
+  const budgetValues = { total: TOTAL_BUDGET_KRW, spent: totalSpent, remaining };
 
-  const loadRate = async () => {
-    setRateLoading(true);
-    setRateError(null);
-    try {
-      const data = await fetchExchangeRate();
-      setExchangeRate(data);
-    } catch {
-      setRateError("환율 정보를 불러올 수 없습니다.");
-    } finally {
-      setRateLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadRate();
-  }, []);
-
-  const handleRefreshRate = () => {
-    loadRate();
-  };
+  const handleRefreshRate = () => refetchRate();
 
   const handleOpenModal = () => {
     setForm(DEFAULT_FORM);
     setShowModal(true);
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
+  const handleCloseModal = () => setShowModal(false);
 
   const handleQuickAction = (key: string) => {
     if (key === "add") {
@@ -115,24 +122,26 @@ export default function BudgetPage() {
     const rate = exchangeRate?.rate ?? 0.026;
     const amountTHB = Math.round(amountKRW * rate);
 
-    const newTransaction: Transaction = {
-      id: nextId,
+    createMutation.mutate({
       category: form.category,
       description: form.description,
-      date: new Date().toISOString().split("T")[0],
       amountKRW,
       amountTHB,
-      status: "완료",
-    };
-
-    setTransactions((prev) => [newTransaction, ...prev]);
-    setNextId((prev) => prev + 1);
+      date: new Date().toISOString().split("T")[0],
+    });
     setShowModal(false);
   };
 
-  const handleDeleteTransaction = (id: number) => {
-    setTransactions((prev) => prev.filter((t) => t.id !== id));
-  };
+  const handleDeleteTransaction = (id: number) => deleteMutation.mutate(id);
+
+  if (!currentTrip) {
+    return (
+      <PageContainer>
+        <h1 className="text-2xl font-bold text-foreground mb-6">예산 관리</h1>
+        <NoTripSelected />
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>
@@ -148,7 +157,7 @@ export default function BudgetPage() {
               budgetValues={budgetValues}
               spentPercent={spentPercent}
               remaining={remaining}
-              exchangeRate={exchangeRate}
+              exchangeRate={exchangeRate ?? null}
             />
             <QuickActions onAction={handleQuickAction} />
             <TransactionTable
@@ -159,10 +168,12 @@ export default function BudgetPage() {
 
           <div className="space-y-6">
             <ExchangeRateCard
-              exchangeRate={exchangeRate}
+              exchangeRate={exchangeRate ?? null}
               rateLoading={rateLoading}
-              rateError={rateError}
+              rateError={rateError ? "환율 정보를 불러올 수 없습니다." : null}
               onRefresh={handleRefreshRate}
+              currencyCode={currencyCode}
+              currencyName={currencyName}
             />
             <CategoryStats
               categoryStats={categoryStats}
@@ -175,7 +186,7 @@ export default function BudgetPage() {
       {showModal && (
         <AddExpenseModal
           form={form}
-          exchangeRate={exchangeRate}
+          exchangeRate={exchangeRate ?? null}
           onClose={handleCloseModal}
           onSubmit={handleSubmitExpense}
           onCategory={handleFormCategory}
