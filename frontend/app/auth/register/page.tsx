@@ -51,9 +51,9 @@ const Page = () => {
   const handleFormSubmit = handleSubmit(onRegister);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
+    <div className="min-h-screen bg-background flex items-center justify-center -mt-18 px-4">
+      <div className="w-full max-w-md flex flex-col gap-8">
+        <div className="text-center">
           <h1 className="text-3xl font-bold text-primary mb-1">떠나세연</h1>
           <p className="text-text-secondary text-sm">나의 여행 플래너</p>
         </div>
