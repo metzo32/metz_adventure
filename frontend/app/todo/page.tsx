@@ -125,7 +125,7 @@ const TodoPage = () => {
     <PageContainer>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground">여행 일정</h1>
-        <p className="text-sm text-text-secondary mt-1">치앙마이 방문 장소와 일정을 관리하세요</p>
+        <p className="text-sm text-text-secondary mt-1">온세상 방문 장소와 일정을 관리하세요</p>
       </div>
 
       <div className="grid grid-cols-3 gap-3 mb-6">

@@ -88,9 +88,9 @@ export default function HeroSection() {
         {/* 카피 */}
         <div>
           <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-4">
-            나만의<br />
+            다가오는<br />
             <span className="text-primary">{tripTitle}</span>을<br />
-            스마트하게
+            야물딱지게
           </h1>
           <p className="text-slate-500 text-base mb-8 leading-relaxed">
             계획부터 현지 기록까지, 여행의 모든 순간을 한 곳에서 관리하세요.
@@ -99,9 +99,6 @@ export default function HeroSection() {
           <div className="flex items-center gap-3">
             <LinkPreset href="/auth/register">
               무료로 시작하기 →
-            </LinkPreset>
-            <LinkPreset href="/auth/login" mode="light">
-              로그인
             </LinkPreset>
           </div>
         </div>

@@ -1,12 +1,12 @@
-# PRD: 치앙마이 여행 플래너 앱
+# PRD: 여행 플래너 앱
 
 ## 프로젝트 개요
 
 | 항목 | 내용 |
 |------|------|
 | 프로젝트명 | 떠나세연 |
-| 목적 | 치앙마이 여행 계획·실행·기록 통합 플랫폼 |
-| 대상 사용자 | 개인 여행자 (본인) |
+| 목적 | 여행 계획·실행·기록 통합 플랫폼 |
+| 대상 사용자 | 개인 여행자 - 본인 및 초대코드를 공유받은 참여자 |
 | 여행 기간 | 2026년 5월 |
 | 패키지 매니저 | yarn |
 
@@ -105,8 +105,8 @@ metz_chiangmai/
 | 위젯 | 내용 | API |
 |------|------|-----|
 | 한국 시간 | KST (UTC+9) 실시간 | 클라이언트 JS |
-| 치앙마이 시간 | ICT (UTC+7) 실시간 | 클라이언트 JS |
-| 치앙마이 날씨 | 기온 + 날씨 아이콘 | OpenWeatherMap |
+| 해당 지역 시간 | ICT (UTC+7) 실시간 | 클라이언트 JS |
+| 해당 지역 날씨 | 기온 + 날씨 아이콘 | OpenWeatherMap |
 | 바트 환율 | 1 THB = ₩XXX | ExchangeRate-API |
 
 > 날씨·환율은 1시간 캐싱 (Next.js Route Handler `revalidate: 3600`)
@@ -130,7 +130,7 @@ metz_chiangmai/
 
 | 섹션 | 내용 |
 |------|------|
-| 히어로 | 치앙마이 감성 배경 이미지 + 앱 타이틀 카피 |
+| 히어로 | 감성 배경 이미지 + 앱 타이틀 카피 |
 | 기능 소개 | 카드 형태로 6개 페이지 기능 요약 |
 | D-Day 카운터 | 여행까지 남은 날짜 실시간 표시 |
 | CTA | 로그인 / 회원가입 버튼 |
@@ -403,7 +403,7 @@ CREATE TABLE expenses (
 
 | API | 용도 | 키 발급 |
 |-----|------|---------|
-| OpenWeatherMap | 치앙마이 날씨 (lat:18.79, lon:98.98) | openweathermap.org 무료 플랜 |
+| OpenWeatherMap | 해당 지역 날씨 (lat:18.79, lon:98.98) | openweathermap.org 무료 플랜 |
 | ExchangeRate-API | KRW/THB 실시간 환율 | exchangerate-api.com 무료 플랜 |
 | Google OAuth | 소셜 로그인 | Google Cloud Console |
 | Google Maps Embed | 방문 장소 지도 핀 | Google Cloud Console (선택) |
@@ -415,8 +415,8 @@ CREATE TABLE expenses (
 | 컴포넌트 | 역할 |
 |---------|------|
 | `<Header>` | 네비게이션 + 시간×2 + 날씨 + 환율 위젯 |
-| `<TimeWidget>` | KST/ICT 실시간 시계 (1초 interval) |
-| `<WeatherWidget>` | 치앙마이 기온 + 날씨 아이콘 |
+| `<TimeWidget>` | KST/{해당 지역} 실시간 시계 (1초 interval) |
+| `<WeatherWidget>` | 해당 지역 기온 + 날씨 아이콘 |
 | `<ExchangeWidget>` | 1 THB = ₩XXX 미리보기 |
 | `<StarRating>` | 0.5점 단위 별점 입력 및 표시 |
 | `<EmptyState>` | 데이터 없을 때 빈 상태 UI |
@@ -431,11 +431,11 @@ CREATE TABLE expenses (
 
 | 항목 | 내용 |
 |------|------|
-| 컬러 | 골든 옐로우, 웜 오렌지, 딥 그린 (치앙마이 감성) |
+| 컬러 | 골든 옐로우, 웜 오렌지, 딥 그린 |
 | 폰트 | Pretendard (한국어) + Inter (영문) |
 | 무드 | 여행 일지 + 모던 미니멀 |
 | 반응형 | 모바일 우선 (여행 중 스마트폰 사용 고려) |
-| UI 라이브러리 | MUI v5 — 테마 커스터마이징으로 치앙마이 컬러 적용 |
+| UI 라이브러리 | MUI v5  |
 | 그래프 라이브러리 | Recharts — 걸음 수(BarChart), 지출 추이(LineChart) |
 
 ---
@@ -480,7 +480,7 @@ node server.js    # http://localhost:4000
 - [ ] Express API 각 엔드포인트 응답 확인 (Thunder Client 또는 Postman)
 - [ ] `travel.db` 파일 자동 생성 및 CRUD 확인
 - [ ] Google 로그인 플로우 E2E 확인
-- [ ] 날씨 API: 치앙마이 기온 응답 확인
+- [ ] 날씨 API: 해당 국가 및 도시 기온 응답 확인
 - [ ] 환율 API: KRW/THB 응답 확인
 - [ ] 시간 위젯: KST/ICT 2시간 차이 확인
 - [ ] 모바일 뷰포트 반응형 확인
