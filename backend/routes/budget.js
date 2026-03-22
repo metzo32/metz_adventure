@@ -11,6 +11,22 @@ const requireTrip = (req, res) => {
   return tripId;
 };
 
+router.get('/total-budget', (req, res) => {
+  const tripId = requireTrip(req, res);
+  if (!tripId) return;
+  const trip = db.prepare('SELECT total_budget_krw FROM trips WHERE id = ?').get(tripId);
+  res.json({ total_budget_krw: trip?.total_budget_krw ?? null });
+});
+
+router.put('/total-budget', (req, res) => {
+  const tripId = requireTrip(req, res);
+  if (!tripId) return;
+  const { amount_krw } = req.body;
+  const value = amount_krw != null && amount_krw > 0 ? amount_krw : null;
+  db.prepare('UPDATE trips SET total_budget_krw = ? WHERE id = ?').run(value, tripId);
+  res.json({ total_budget_krw: value });
+});
+
 router.get('/config', (req, res) => {
   const tripId = requireTrip(req, res);
   if (!tripId) return;

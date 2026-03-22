@@ -24,5 +24,6 @@ export type ExchangeRateData = {
 export type AddExpenseForm = {
   category: string;
   description: string;
+  amountForeign: string;
   amountKRW: string;
 };

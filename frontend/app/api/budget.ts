@@ -47,6 +47,24 @@ export const deleteExpense = async (id: number): Promise<void> => {
   await fetch(`${API}/expenses/${id}`, { method: "DELETE" });
 };
 
+export const fetchTotalBudget = async (tripId: number): Promise<number | null> => {
+  const res = await fetch(`${API}/total-budget`, { headers: tripHeaders(tripId) });
+  if (!res.ok) throw new Error("총 예산 정보를 불러오지 못했습니다.");
+  const data = await res.json();
+  return data.total_budget_krw ?? null;
+};
+
+export const saveTotalBudget = async (tripId: number, amountKrw: number | null): Promise<number | null> => {
+  const res = await fetch(`${API}/total-budget`, {
+    method: "PUT",
+    headers: tripHeaders(tripId),
+    body: JSON.stringify({ amount_krw: amountKrw }),
+  });
+  if (!res.ok) throw new Error("총 예산 저장에 실패했습니다.");
+  const data = await res.json();
+  return data.total_budget_krw ?? null;
+};
+
 export const fetchExchangeRate = async (currencyCode = "THB"): Promise<ExchangeRateData> => {
   const res = await fetch("https://api.exchangerate-api.com/v4/latest/KRW", {
     next: { revalidate: 3600 },
