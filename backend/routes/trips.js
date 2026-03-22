@@ -143,4 +143,18 @@ router.post('/:id/invite', (req, res) => {
   res.json({ code, expires_at: expiresAt });
 });
 
+// PUT /api/trips/:id/memo — 여행 메모 저장
+router.put('/:id/memo', (req, res) => {
+  const userId = requireUser(req, res);
+  if (!userId) return;
+
+  const isMember = db.prepare(
+    'SELECT 1 FROM trip_members WHERE trip_id = ? AND user_id = ?'
+  ).get(req.params.id, userId);
+  if (!isMember) return res.status(403).json({ error: '접근 권한이 없습니다.' });
+
+  db.prepare('UPDATE trips SET memo = ? WHERE id = ?').run(req.body.memo ?? '', req.params.id);
+  res.json(db.prepare('SELECT * FROM trips WHERE id = ?').get(req.params.id));
+});
+
 module.exports = router;

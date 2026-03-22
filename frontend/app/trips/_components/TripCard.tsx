@@ -48,12 +48,12 @@ export const TripCard = ({ trip }: Props) => {
   const handleDeleteClose = () => setDeleteOpen(false);
   const handleDeleteConfirm = () => handleDelete();
 
+
   return (
     <>
       <div
-        className={`bg-card rounded-xl border p-5 flex flex-col gap-4 transition-all ${
-          isActive ? "border-primary shadow-md" : "border-border hover:border-primary/40"
-        }`}
+        className={`bg-card rounded-xl border p-5 flex flex-col gap-4 transition-all ${isActive ? "border-primary shadow-md" : "border-border hover:border-primary/40"
+          }`}
       >
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
@@ -63,9 +63,8 @@ export const TripCard = ({ trip }: Props) => {
               )}
               <h3 className="font-semibold text-foreground truncate">{trip.name}</h3>
             </div>
-            {trip.description && (
-              <p className="text-sm text-text-secondary line-clamp-2">{trip.description}</p>
-            )}
+
+            <p className="text-sm text-text-secondary line-clamp-2">{trip.description || "-"}</p>
           </div>
           {isOwner && (
             <button

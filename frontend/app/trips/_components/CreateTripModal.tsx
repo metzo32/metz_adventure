@@ -68,7 +68,7 @@ export const CreateTripModal = ({ open, onClose }: Props) => {
             control={control}
             name="name"
             label="여행 이름"
-            placeholder="예) 치앙마이 여행 2025"
+            placeholder="예) 온세상 여행 2025"
             maxLength={20}
             rules={{ required: "여행 이름을 입력해주세요." }}
           />
@@ -92,7 +92,7 @@ export const CreateTripModal = ({ open, onClose }: Props) => {
               control={control}
               name="city"
               label="도시"
-              placeholder="예) 치앙마이 (선택)"
+              placeholder="예) 서울 (선택)"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">

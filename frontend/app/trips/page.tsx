@@ -36,13 +36,13 @@ const Page = () => {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-bold text-foreground">내 여행 목록</h1>
         <div className="flex gap-2">
-          <Button onClick={handleJoinOpen} mode="light">
+          <Button onClick={handleJoinOpen} mode="light" className="flex gap-2 items-center">
             <VpnKeyIcon sx={{ fontSize: 16 }} />
-            코드로 참여
+            <span>코드로 참여</span>
           </Button>
-          <Button onClick={handleCreateOpen} mode="full">
+          <Button onClick={handleCreateOpen} mode="full" className="flex gap-2 items-center">
             <AddIcon sx={{ fontSize: 16 }} />
-            여행 만들기
+            <span>여행 만들기</span>
           </Button>
         </div>
       </div>
