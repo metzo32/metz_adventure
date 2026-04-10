@@ -32,13 +32,13 @@ export default function QuickActions({ onAction }: QuickActionsProps) {
               : "bg-white text-foreground hover:bg-slate-50"
             }`}
         >
-          <div className={`p-2 rounded-full ${primary ? "bg-white/20" : "bg-lighter"}`}>
+          <div className={`p-1 lg:p-2 rounded-full ${primary ? "bg-white/20" : "bg-lighter"}`}>
             <Icon
               className={primary ? "text-white" : "text-pribg-primary"}
               fontSize="small"
             />
           </div>
-          {label}
+          <span className="hidden lg:block">{label}</span>
         </button>
       ))}
     </div>

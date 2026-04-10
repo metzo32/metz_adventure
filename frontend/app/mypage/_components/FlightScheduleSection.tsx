@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTrip } from "@/app/contexts/TripContext";
 import { FlightTakeoff, FlightLand, Add, Edit, Delete, AccessTime } from "@mui/icons-material";
 import { Button } from "@/components/Button";
 import { fetchFlights, deleteFlight, calcDurationMinutes, formatDuration } from "@/app/api/mypage";
-import type { Flight } from "@/app/mypage/types";
+import { getTimeDiffFromKst } from "@/components/Time";
 import AddFlightModal from "@/app/mypage/_components/AddFlightModal";
+import { COUNTRIES } from "@/app/trips/data/constants";
+import type { Flight } from "@/app/mypage/types";
 
 type Props = {
   tripId: number;
@@ -21,6 +24,11 @@ const FlightScheduleSection = ({ tripId }: Props) => {
   const queryClient = useQueryClient();
   const [addOpen, setAddOpen] = useState(false);
   const [editFlight, setEditFlight] = useState<Flight | null>(null);
+
+  const { currentTrip } = useTrip();
+  const countryInfo = COUNTRIES.find((c) => c.value === currentTrip?.country);
+  const destTimezone = countryInfo?.timezone ?? "Asia/Bangkok";
+  const timeDiff = currentTrip ? getTimeDiffFromKst(destTimezone) : 0;
 
   const { data: flights = [] } = useQuery<Flight[]>({
     queryKey: ["flights", tripId],
@@ -66,7 +74,10 @@ const FlightScheduleSection = ({ tripId }: Props) => {
       ) : (
         <div className="flex flex-col gap-3">
           {flights.map((flight) => {
-            const durationMin = calcDurationMinutes(flight.departure_time, flight.arrival_time);
+            const rawDuration = calcDurationMinutes(flight.departure_time, flight.arrival_time);
+            const durationMin = flight.type === "outbound"
+              ? rawDuration - timeDiff * 60
+              : rawDuration + timeDiff * 60;
             const isOutbound = flight.type === "outbound";
             const handleEdit = () => handleEditOpen(flight);
             const handleDeleteClick = () => handleDelete(flight.id);
@@ -78,11 +89,10 @@ const FlightScheduleSection = ({ tripId }: Props) => {
               >
                 <div className="flex items-center justify-between">
                   <span
-                    className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                      isOutbound
+                    className={`text-xs font-medium px-2 py-0.5 rounded-full ${isOutbound
                         ? "bg-lighter text-primary"
                         : "bg-green-50 text-green-600"
-                    }`}
+                      }`}
                   >
                     {isOutbound ? (
                       <FlightTakeoff sx={{ fontSize: 12, mr: 0.5 }} />

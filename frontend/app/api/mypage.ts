@@ -57,6 +57,23 @@ export const saveStep = async (tripId: number, data: AddStepsForm): Promise<Step
   return res.json();
 };
 
+export const updateStep = async (tripId: number, id: number, data: AddStepsForm): Promise<StepEntry> => {
+  const res = await fetch(`${API}/steps/${id}`, {
+    method: "PUT",
+    headers: tripHeaders(tripId),
+    body: JSON.stringify({ date: data.date, count: data.count, memo: data.memo }),
+  });
+  if (!res.ok) throw new Error("걸음 수 수정에 실패했습니다.");
+  return res.json();
+};
+
+export const deleteStep = async (tripId: number, id: number): Promise<void> => {
+  await fetch(`${API}/steps/${id}`, {
+    method: "DELETE",
+    headers: tripHeaders(tripId),
+  });
+};
+
 export const fetchFlights = async (tripId: number): Promise<Flight[]> => {
   const res = await fetch(`${API}/flights`, { headers: tripHeaders(tripId) });
   if (!res.ok) throw new Error("항공편 정보를 불러오지 못했습니다.");

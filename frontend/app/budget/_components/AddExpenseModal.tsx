@@ -1,4 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button } from "@/components/Button";
 import { AddExpenseForm, ExchangeRateData } from "../types";
 import { CATEGORIES } from "../data";
@@ -50,15 +51,20 @@ export default function AddExpenseModal({
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-foreground mb-1.5">카테고리</label>
-            <select
-              value={form.category}
-              onChange={onCategory}
-              className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary bg-white"
-            >
+            <div className="relative">
+              <select
+                value={form.category}
+                onChange={onCategory}
+                className="w-full appearance-none border border-border rounded-xl px-4 py-2.5 pr-10 text-sm focus:outline-none focus:border-primary bg-white"
+              >
               {CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}
-            </select>
+              </select>
+              <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-foreground">
+                <ExpandMoreIcon sx={{ fontSize: 20 }} />
+              </div>
+            </div>
           </div>
 
           <div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   BarChart,
   Bar,
@@ -11,10 +11,10 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { DirectionsWalk, Add } from "@mui/icons-material";
+import { DirectionsWalk, Add, Edit, Delete } from "@mui/icons-material";
 import { Button } from "@/components/Button";
 import dayjs from "dayjs";
-import { fetchSteps } from "@/app/api/mypage";
+import { fetchSteps, deleteStep } from "@/app/api/mypage";
 import type { StepEntry } from "@/app/mypage/types";
 import AddStepsModal from "@/app/mypage/_components/AddStepsModal";
 
@@ -25,12 +25,19 @@ type Props = {
 const tooltipFormatter = (value: number) => [value.toLocaleString() + "걸음", "걸음 수"];
 
 const PedometerChart = ({ tripId }: Props) => {
+  const queryClient = useQueryClient();
   const [addOpen, setAddOpen] = useState(false);
+  const [editStep, setEditStep] = useState<StepEntry | null>(null);
 
   const { data: steps = [] } = useQuery<StepEntry[]>({
     queryKey: ["steps", tripId],
     queryFn: () => fetchSteps(tripId),
     enabled: !!tripId,
+  });
+
+  const { mutate: handleDeleteStep } = useMutation({
+    mutationFn: (id: number) => deleteStep(tripId, id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["steps", tripId] }),
   });
 
   const chartData = [...steps]
@@ -42,8 +49,12 @@ const PedometerChart = ({ tripId }: Props) => {
 
   const totalSteps = steps.reduce((sum, s) => sum + s.count, 0);
 
+  const sortedSteps = [...steps].sort((a, b) => b.date.localeCompare(a.date));
+
   const handleAddOpen = () => setAddOpen(true);
   const handleAddClose = () => setAddOpen(false);
+  const handleEditOpen = (step: StepEntry) => setEditStep(step);
+  const handleEditClose = () => setEditStep(null);
 
   return (
     <div className="bg-card rounded-2xl border border-border p-5 flex flex-col gap-4">
@@ -83,7 +94,45 @@ const PedometerChart = ({ tripId }: Props) => {
         </ResponsiveContainer>
       )}
 
+      {sortedSteps.length > 0 && (
+        <div className="flex flex-col gap-2">
+          {sortedSteps.map((step) => {
+            const handleEdit = () => handleEditOpen(step);
+            const handleDelete = () => handleDeleteStep(step.id);
+
+            return (
+              <div
+                key={step.id}
+                className="flex items-center justify-between border border-border rounded-xl px-4 py-3"
+              >
+                <div>
+                  <p className="text-sm font-medium text-foreground">
+                    {dayjs(step.date).format("M월 D일 (ddd)")}
+                  </p>
+                  <p className="text-xs text-text-secondary">{step.count.toLocaleString()}걸음{step.memo ? ` · ${step.memo}` : ""}</p>
+                </div>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={handleEdit}
+                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-lighter transition-colors"
+                  >
+                    <Edit sx={{ fontSize: 14, color: "#64748B" }} />
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 transition-colors"
+                  >
+                    <Delete sx={{ fontSize: 14, color: "#EF4444" }} />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       <AddStepsModal open={addOpen} onClose={handleAddClose} tripId={tripId} />
+      <AddStepsModal open={!!editStep} onClose={handleEditClose} tripId={tripId} editStep={editStep} />
     </div>
   );
 };

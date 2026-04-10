@@ -45,11 +45,11 @@ const TodoList = ({ selectedDate, items, allItems, onItemClick, onAddClick, onTo
               ? dayjs(selectedDate).format('M월 D일 (ddd)')
               : '날짜를 선택하세요'}
           </h2>
-          {/* {selectedDate && (
+          {(selectedDate && sorted.length > 0) && (
             <p className="text-sm text-text-secondary mt-0.5">
-              {sorted.length > 0 ? `${sorted.length}개의 일정` : '등록된 일정이 없습니다.'}
+              {`${sorted.length}개의 일정`}
             </p>
-          )} */}
+          )}
         </div>
 
         {/* <Button onClick={onAddClick}>
@@ -62,18 +62,18 @@ const TodoList = ({ selectedDate, items, allItems, onItemClick, onAddClick, onTo
       {selectedDate && (
         <div className="flex flex-col gap-3">
           {sorted.length === 0 ? (
-            <div className="flex flex-col items-center gap-4 bg-card rounded-2xl border border-border p-8 text-center">
+            <div className="h-full flex flex-col items-center gap-4 bg-card rounded-2xl border border-border p-8 text-center">
               <p className="text-text-secondary text-sm">이 날 등록된 일정이 없습니다.</p>
-              <Button onClick={onAddClick} className='w-fit flex items-center gap-1'>
+              {/* <Button onClick={onAddClick} className='w-fit flex items-center gap-1'>
                 <Add sx={{ fontSize: 18 }} /> 일정 추가하기
-              </Button>
+              </Button> */}
             </div>
           ) : (
             sorted.map((item) => (
-              <button
+              <div
                 key={item.id}
                 onClick={() => onItemClick(item)}
-                className="w-full bg-card rounded-2xl border border-border p-4 text-left hover:shadow-md transition-all group"
+                className="w-full bg-card rounded-2xl border border-border p-4 text-left hover:shadow-md transition-all group cursor-pointer"
               >
                 <div className="flex items-start gap-3">
                   {/* Toggle complete */}
@@ -124,7 +124,7 @@ const TodoList = ({ selectedDate, items, allItems, onItemClick, onAddClick, onTo
                     className="shrink-0 mt-0.5 group-hover:text-primary transition-colors"
                   />
                 </div>
-              </button>
+              </div>
             ))
           )}
         </div>
@@ -156,12 +156,12 @@ const TodoList = ({ selectedDate, items, allItems, onItemClick, onAddClick, onTo
         </div>
       )}
 
-      {!selectedDate && (
+      {/* {!selectedDate && (
         <div className="bg-white flex flex-col rounded-2xl p-6 text-center border border-border border-dashed">
           <p className="text-text-secondary text-sm">좌측 달력에서 날짜를 선택하면</p>
           <p className="text-text-secondary text-sm">해당 날짜의 일정을 확인할 수 있습니다.</p>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

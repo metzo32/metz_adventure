@@ -27,13 +27,13 @@ export default function TransactionTable({ transactions, onDelete }: Transaction
         <span className="text-xs text-text-secondary">총 {transactions.length}건</span>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm md:text-xs max-md:text-[10px]">
           <thead>
             <tr className="bg-slate-50">
               {TABLE_HEADERS.map((header) => (
                 <th
                   key={header}
-                  className="px-4 py-3 text-left text-xs font-medium text-text-secondary whitespace-nowrap"
+                  className={`px-4 py-3 text-left text-xs font-medium text-text-secondary whitespace-nowrap ${header === "카테고리" ? "max-md:hidden" : ""} ${header === "내용" ? "max-md:w-1/2" : ""}`}
                 >
                   {header}
                 </th>
@@ -47,7 +47,7 @@ export default function TransactionTable({ transactions, onDelete }: Transaction
                 key={tx.id}
                 className="border-t border-border hover:bg-slate-50 transition-colors"
               >
-                <Td className="py-3">
+                <Td className="py-3 md:text-xs max-md:text-[10px] max-md:hidden">
                   <span
                     className="px-2 py-0.5 rounded-full text-xs font-medium text-white"
                     style={{ backgroundColor: CATEGORY_COLORS[tx.category] }}
@@ -55,11 +55,11 @@ export default function TransactionTable({ transactions, onDelete }: Transaction
                     {tx.category}
                   </span>
                 </Td>
-                <Td className="py-3 text-foreground font-medium">{tx.description}</Td>
+                <Td className="whitespace-nowrap py-3 md:text-xs max-md:text-[10px] max-md:w-1/2 text-foreground font-medium">{tx.description}</Td>
                 <Td className="py-3 text-text-secondary">{tx.date}</Td>
-                <Td className="py-3">
+                <Td className="py-3 md:text-xs max-md:text-[10px]">
                   <span
-                    className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${STATUS_STYLES[tx.status]}`}
+                    className={`whitespace-nowrap px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-medium ${STATUS_STYLES[tx.status]}`}
                   >
                     • {tx.status}
                   </span>
@@ -70,7 +70,7 @@ export default function TransactionTable({ transactions, onDelete }: Transaction
                 <Td className="py-3 text-text-secondary">
                   -{formatTHB(tx.amountTHB)}
                 </Td>
-                <Td className="py-3">
+                <Td className="py-3 md:text-xs max-md:text-[10px]">
                   <button
                     onClick={makeHandleDelete(onDelete, tx.id)}
                     className="text-text-secondary hover:text-red-500 transition-colors cursor-pointer"

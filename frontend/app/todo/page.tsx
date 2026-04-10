@@ -4,17 +4,17 @@ import { useState, useMemo } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/ko';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Add } from '@mui/icons-material';
 import TodoCalendar from './_components/TodoCalendar';
 import TodoList from './_components/TodoList';
 import TodoDetailModal from './_components/TodoDetailModal';
 import AddTodoModal from './_components/AddTodoModal';
 import { PageContainer } from '@/components/PageContainer';
 import { NoTripSelected } from '@/components/NoTripSelected';
+import { Button } from '@/components/Button';
 import { useTrip } from '@/app/contexts/TripContext';
 import { fetchTodos, createTodo, updateTodo, deleteTodo } from '@/app/api/todos';
 import type { TodoItem } from './types';
-
-dayjs.locale('ko');
 
 const TodoPage = () => {
   const { currentTrip } = useTrip();
@@ -137,7 +137,7 @@ const TodoPage = () => {
         ))}
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-5">
+      <div className="flex flex-col lg:flex-row gap-5 h-fit">
         <div className="lg:w-72 shrink-0">
           <TodoCalendar
             currentMonth={currentMonth}
@@ -146,6 +146,10 @@ const TodoPage = () => {
             onMonthChange={handleMonthChange}
             onDateSelect={handleDateSelect}
           />
+
+          <Button onClick={handleAddClick} className='w-full flex items-center justify-center gap-1 mt-3'>
+            <Add sx={{ fontSize: 18 }} /> 일정 추가하기
+          </Button>
 
           {/* <div className="mt-4 bg-card rounded-2xl border border-border p-4">
             <p className="text-xs font-semibold text-text-secondary mb-2">
@@ -186,6 +190,7 @@ const TodoPage = () => {
           />
         </div>
       </div>
+
 
       <TodoDetailModal
         item={detailItem}

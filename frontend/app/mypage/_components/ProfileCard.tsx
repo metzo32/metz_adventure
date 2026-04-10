@@ -20,6 +20,7 @@ const STAT_ITEMS = (tripCount: number, totalExpense: number) => [
   },
 ];
 
+
 const ProfileCard = () => {
   const { data: session } = useSession();
   const userId = (session?.user as { id?: string })?.id ?? "";
@@ -39,8 +40,9 @@ const ProfileCard = () => {
     enabled: !!userId,
   });
 
-  const totalExpense = pastTrips.reduce((sum, t) => sum + t.total_expense_krw, 0);
+  const totalExpense = pastTrips.reduce((sum, t) => sum + Number(t.total_expense_krw), 0);
   const stats = STAT_ITEMS(allTrips.length, totalExpense);
+  console.log(totalExpense)
 
   const handleSignOut = () => signOut({ callbackUrl: "/auth/login" });
 

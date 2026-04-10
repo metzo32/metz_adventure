@@ -33,14 +33,14 @@ const Page = () => {
 
   return (
     <PageContainer>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col md:flex-row md::items-center justify-between mb-6">
         <h1 className="text-xl font-bold text-foreground">내 여행 목록</h1>
-        <div className="flex gap-2">
-          <Button onClick={handleJoinOpen} mode="light" className="flex gap-2 items-center">
+        <div className="flex gap-2 mt-4 md:mt-0">
+          <Button onClick={handleJoinOpen} mode="light" className="flex max-md:flex-1 gap-2 items-center justify-center">
             <VpnKeyIcon sx={{ fontSize: 16 }} />
             <span>코드로 참여</span>
           </Button>
-          <Button onClick={handleCreateOpen} mode="full" className="flex gap-2 items-center">
+          <Button onClick={handleCreateOpen} mode="full" className="flex max-md:flex-1 gap-2 items-center justify-center">
             <AddIcon sx={{ fontSize: 16 }} />
             <span>여행 만들기</span>
           </Button>

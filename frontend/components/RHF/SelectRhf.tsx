@@ -1,6 +1,7 @@
 "use client";
 
 import { Controller, type Control, type RegisterOptions } from "react-hook-form";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 interface SelectRhfProps {
   control: Control<any>;
@@ -17,7 +18,7 @@ interface SelectRhfProps {
 }
 
 const BASE_CLASS =
-  "w-full border border-border rounded-lg px-2 py-1 text-sm outline-none focus:border-primary bg-white";
+  "w-full appearance-none border border-border rounded-lg px-2 py-1 pr-8 text-sm outline-none focus:border-primary bg-white";
 
 export const SelectRhf = ({
   control,
@@ -54,25 +55,30 @@ export const SelectRhf = ({
               </label>
             )}
 
-            <select
-              id={name}
-              disabled={disabled}
-              value={field.value ?? defaultValue ?? ""}
-              onChange={handleChange}
-              onBlur={field.onBlur}
-              className={`${BASE_CLASS} ${disabled ? "bg-slate-100 text-text-secondary cursor-not-allowed" : ""}`}
-            >
-              {placeholder && (
-                <option value="" disabled>
-                  {placeholder}
-                </option>
-              )}
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                id={name}
+                disabled={disabled}
+                value={field.value ?? defaultValue ?? ""}
+                onChange={handleChange}
+                onBlur={field.onBlur}
+                className={`${BASE_CLASS} ${disabled ? "bg-slate-100 text-text-secondary cursor-not-allowed" : ""}`}
+              >
+                {placeholder && (
+                  <option value="" disabled>
+                    {placeholder}
+                  </option>
+                )}
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-foreground">
+                <ExpandMoreIcon sx={{ fontSize: 18 }} />
+              </div>
+            </div>
 
             {fieldState.error && (
               <small className="text-red-500 text-xs">{fieldState.error.message}</small>

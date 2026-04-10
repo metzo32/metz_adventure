@@ -68,7 +68,7 @@ const PastTripCard = ({ trip, userId }: Props) => {
         <div className="flex items-center gap-1.5 bg-lighter rounded-xl px-3 py-2 shrink-0">
           <AccountBalanceWallet sx={{ fontSize: 15, color: "#0832A4" }} />
           <span className="text-primary font-semibold text-sm">
-            {trip.total_expense_krw.toLocaleString()}원
+            {Number(trip.total_expense_krw).toLocaleString()}원
           </span>
         </div>
       </div>
