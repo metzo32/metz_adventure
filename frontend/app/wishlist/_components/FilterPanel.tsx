@@ -31,7 +31,7 @@ export const FilterPanel = ({ filteredCount, onFilterChange, onAddNew }: FilterP
   return (
     <div className="mb-4 p-4 bg-white rounded-2xl border border-border flex justify-between items-center">
 
-      <div className="flex flex-wrap gap-12">
+      <div className="flex flex-wrap gap-8">
         <div>
           <p className="text-xs font-semibold text-text-secondary mb-2">카테고리</p>
           <div className="flex gap-2 flex-wrap">
@@ -71,7 +71,7 @@ export const FilterPanel = ({ filteredCount, onFilterChange, onAddNew }: FilterP
           <span className="font-semibold text-foreground">{filteredCount}</span>
           건
         </span>
-        <Button onClick={onAddNew}>추가하기 +</Button>
+        <Button onClick={onAddNew} className="whitespace-nowrap">추가하기 +</Button>
       </div>
     </div>
   );

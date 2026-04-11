@@ -79,12 +79,12 @@ export const WishlistTable = ({ tripId, filtered, addCount, onCloseAdd, onAdd, o
 
   return (
     <FormProvider {...methods}>
-      <div className="bg-white rounded-2xl border border-border overflow-hidden">
+      <div className="bg-white rounded-2xl border border-border overflow-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border text-text-secondary text-xs">
               {TABLE_COLUMNS.map(({ label, className }) => (
-                <th key={label} className={`py-3 px-4 text-left font-medium ${className}`}>{label}</th>
+                <th key={label} className={`whitespace-nowrap py-3 px-4 text-left font-medium ${className}`}>{label}</th>
               ))}
             </tr>
           </thead>
