@@ -25,7 +25,7 @@ import type { Trip } from "@/app/trips/types";
 const NAV_ITEMS = [
     { href: "/wishlist", label: "위시리스트", icon: FavoriteIcon },
     { href: "/todo", label: "투두리스트", icon: ChecklistIcon },
-    { href: "/diary", label: "여행 일기", icon: MenuBookIcon },
+    // { href: "/diary", label: "여행 일기", icon: MenuBookIcon },
     { href: "/places", label: "방문 장소", icon: LocationOnIcon },
     { href: "/budget", label: "예산 관리", icon: AccountBalanceWalletIcon },
     { href: "/mypage", label: "마이페이지", icon: PersonIcon },
