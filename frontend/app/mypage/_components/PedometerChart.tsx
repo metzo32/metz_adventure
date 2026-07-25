@@ -22,10 +22,10 @@ type Props = {
   tripId: number;
 };
 
-const tooltipFormatter = (value: number | string | undefined) => [
-  value != null ? Number(value).toLocaleString() + "걸음" : "-",
+const tooltipFormatter = (value: number | string | readonly (string | number)[] | undefined) => [
+  typeof value === "number" ? value.toLocaleString() + "걸음" : value != null ? String(value) : "-",
   "걸음 수",
-];
+] as [string, string];
 
 const PedometerChart = ({ tripId }: Props) => {
   const queryClient = useQueryClient();
