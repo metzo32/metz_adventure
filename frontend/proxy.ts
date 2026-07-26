@@ -13,7 +13,11 @@ export const proxy = async (request: NextRequest) => {
 
   if (isPublicPath) return NextResponse.next();
 
-  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+    cookieName: "next-auth.session-token",
+  });
 
   if (!token && !isAuthPath) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
