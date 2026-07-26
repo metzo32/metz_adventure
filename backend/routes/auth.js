@@ -24,22 +24,29 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
+  console.log('[AUTH] /login 요청:', { email, hasPassword: !!password });
+
   if (!email || !password) {
+    console.log('[AUTH] /login 실패: 입력값 누락');
     return res.status(400).json({ error: '이메일과 비밀번호를 입력해주세요.' });
   }
 
   const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
   const user = rows[0];
   if (!user || !user.password_hash) {
+    console.log('[AUTH] /login 실패: 유저 없음', { email });
     return res.status(401).json({ error: '이메일 또는 비밀번호가 올바르지 않습니다.' });
   }
 
   const isValid = await bcrypt.compare(password, user.password_hash);
   if (!isValid) {
+    console.log('[AUTH] /login 실패: 비밀번호 불일치', { email });
     return res.status(401).json({ error: '이메일 또는 비밀번호가 올바르지 않습니다.' });
   }
 
-  res.json({ id: String(user.id), email: user.email, name: user.name });
+  const responseBody = { id: String(user.id), email: user.email, name: user.name };
+  console.log('[AUTH] /login 성공:', responseBody);
+  res.json(responseBody);
 });
 
 module.exports = router;

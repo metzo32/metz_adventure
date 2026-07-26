@@ -19,17 +19,33 @@ export const authOptions: NextAuthOptions = {
       },
       //실제 로그인 검증 함수. payload = 폼 입력값
       async authorize(payload) {
-        if (!payload?.email || !payload?.password) return null;
+        console.log("[AUTH] authorize 시작:", { email: payload?.email, hasPassword: !!payload?.password });
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
+        if (!payload?.email || !payload?.password) {
+          console.log("[AUTH] authorize 실패: payload 누락");
+          return null;
+        }
+
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`;
+        console.log("[AUTH] 백엔드 요청:", apiUrl);
+
+        const res = await fetch(apiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: payload.email, password: payload.password }),
         });
 
-        if (!res.ok) return null;
+        console.log("[AUTH] 백엔드 응답 status:", res.status);
 
-        return res.json();
+        if (!res.ok) {
+          const errorBody = await res.text();
+          console.log("[AUTH] authorize 실패: 백엔드 에러", errorBody);
+          return null;
+        }
+
+        const user = await res.json();
+        console.log("[AUTH] authorize 성공, user:", { id: user?.id, email: user?.email });
+        return user;
       },
     }),
   ],
@@ -52,15 +68,16 @@ export const authOptions: NextAuthOptions = {
     // JWT 쿠키를 만들거나 조회할 때마다 실행 - BE에서 받은 user.id를 토큰에 추가
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;// 최초 로그인 시 user.id를 token에 추가
+        token.id = user.id;
+        console.log("[AUTH] jwt 콜백 (최초 로그인):", { tokenId: token.id });
       }
       return token;
     },
     // 클라이언트에서 useSession() 호출 시 실행.
     // 토큰에서 꺼낸 id를 세션 객체에 담고 - 컴포넌트에서 session.user.id로 접근 가능
     async session({ session, token }) {
+      console.log("[AUTH] session 콜백:", { tokenId: token?.id, hasUser: !!session.user });
       if (session.user) {
-        // 세션 조회 시 token.id를 session.user.id로 노출
         (session.user as { id?: string }).id = token.id as string;
       }
       return session;

@@ -19,11 +19,23 @@ export const proxy = async (request: NextRequest) => {
     cookieName: "next-auth.session-token",
   });
 
+  console.log("[PROXY]", {
+    pathname,
+    isAuthPath,
+    isPublicPath,
+    hasToken: !!token,
+    tokenId: token?.id ?? null,
+    cookies: request.cookies.getAll().map((c) => c.name),
+    secretSet: !!process.env.NEXTAUTH_SECRET,
+  });
+
   if (!token && !isAuthPath) {
+    console.log("[PROXY] → 리다이렉트 /auth/login (토큰 없음)");
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
   if (token && isAuthPath) {
+    console.log("[PROXY] → 리다이렉트 /places (이미 로그인)");
     return NextResponse.redirect(new URL("/places", request.url));
   }
 
