@@ -1,13 +1,17 @@
 import { useTimes } from '@/components/Time'
+import { COUNTRIES } from '@/app/trips/data/constants'
 import type { Trip } from "@/app/trips/types";
 
 interface Props {
     currentTrip: Trip | null;
-    isLoggedIn: boolean;
 }
 
-export default function TimeWidget({ currentTrip, isLoggedIn }: Props) {
-    const times = useTimes();
+export default function TimeWidget({ currentTrip }: Props) {
+    const countryInfo = COUNTRIES.find((c) => c.value === currentTrip?.country);
+    const destTimezone = countryInfo?.timezone ?? "Asia/Bangkok";
+    const times = useTimes(destTimezone);
+
+    console.log("times", times)
 
     const destLabel = currentTrip
         ? (currentTrip.city ? `${currentTrip.city}, ${currentTrip.country}` : currentTrip.country)

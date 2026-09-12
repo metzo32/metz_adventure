@@ -58,7 +58,7 @@ export default function Header() {
                 <HomeButton />
 
                 {/* 시간 위젯 */}
-                <TimeWidget currentTrip={currentTrip} isLoggedIn={isLoggedIn} />
+                <TimeWidget currentTrip={currentTrip} />
 
                 {isLoggedIn ? (
                     <div className="relative" ref={dropdownRef}>
