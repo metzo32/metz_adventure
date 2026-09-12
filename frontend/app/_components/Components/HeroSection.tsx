@@ -1,6 +1,5 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useTrip } from "@/app/contexts/TripContext";
 import TripTimerCard from "./TripTimerCard";
 import { LinkPreset } from "./LinkPreset";
@@ -9,8 +8,6 @@ import { COUNTRIES } from "@/app/trips/data/constants";
 
 export default function HeroSection() {
   const { currentTrip } = useTrip();
-  const { data: session } = useSession();
-  const isLoggedIn = !!session;
 
   const countryInfo = COUNTRIES.find((c) => c.value === currentTrip?.country);
   const destTimezone = countryInfo?.timezone ?? "Asia/Bangkok";
