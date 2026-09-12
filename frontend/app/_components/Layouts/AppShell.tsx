@@ -1,8 +1,8 @@
 "use client"
 
 import { usePathname } from "next/navigation";
-import Sidebar from "./Sidebar";
-import BottomNav from "./BottomNav";
+import Sidebar from "./Sidebar/Sidebar";
+import BottomNav from "./BottomNav/BottomNav";
 
 const EXCLUDED_PATHS = ["/", "/auth/login", "/auth/register"];
 

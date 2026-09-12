@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "./_components/Layouts/Header";
-import Footer from "./_components/Layouts/Footer";
 import AppShell from "./_components/Layouts/AppShell";
 import Providers from "./_components/Providers";
+import Header from "./_components/Layouts/Header/Header";
+import Footer from "./_components/Layouts/Footer/Footer";
 
 export const metadata: Metadata = {
   title: "떠나세연",

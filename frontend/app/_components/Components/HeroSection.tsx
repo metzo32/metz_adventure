@@ -7,6 +7,7 @@ import { LinkPreset } from "./LinkPreset";
 import GradBox from "./GradBox";
 import dayjs from "dayjs";
 import { COUNTRIES } from "@/app/trips/data/constants";
+import { useSession } from "next-auth/react";
 
 const PHASE_CONFIG = {
   before: { badgePrefix: "D-", labelSuffix: " 출발까지" },
@@ -16,6 +17,9 @@ const PHASE_CONFIG = {
 
 export default function HeroSection() {
   const { currentTrip } = useTrip();
+  const { data: session } = useSession();
+  const userId = (session?.user as { id?: string })?.id ?? "";
+  const isLoggedIn = !!session;
 
   const countryInfo = COUNTRIES.find((c) => c.value === currentTrip?.country);
   const destTimezone = countryInfo?.timezone ?? "Asia/Bangkok";
@@ -36,15 +40,17 @@ export default function HeroSection() {
     ? (currentTrip.city ? `${currentTrip.city}, ${currentTrip.country}` : currentTrip.country)
     : "온세상";
 
-  const tripTitle = currentTrip
+  const tripTitle = isLoggedIn && currentTrip
     ? (currentTrip.city ? `${currentTrip.city} 여행` : `${currentTrip.country} 여행`)
     : "온세상 여행";
+
+  console.log("tripTitle", tripTitle)
 
   const timeDiffLabel = !currentTrip
     ? "0시간"
     : timeDiff === 0
-    ? "시차 없음"
-    : `${timeDiff > 0 ? "+" : ""}${timeDiff}시간`;
+      ? "시차 없음"
+      : `${timeDiff > 0 ? "+" : ""}${timeDiff}시간`;
 
   const phaseConfig = PHASE_CONFIG[timer.phase];
 
