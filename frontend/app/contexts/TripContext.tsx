@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import type { Trip } from "@/app/trips/types";
 
 type TripContextType = {
@@ -14,21 +15,26 @@ const TripContext = createContext<TripContextType>({
 });
 
 export const TripProvider = ({ children }: { children: React.ReactNode }) => {
-  const [currentTrip, setCurrentTripState] = useState<Trip | null>(null);
+  const [tripState, setTripState] = useState<Trip | null>(null);
+  const { data: session } = useSession();
+  const isLoggedIn = !!session;
 
   useEffect(() => {
+    if (!isLoggedIn) return;
     const saved = localStorage.getItem("currentTrip");
     if (saved) {
       try {
-        setCurrentTripState(JSON.parse(saved));
+        setTripState(JSON.parse(saved));
       } catch {
         localStorage.removeItem("currentTrip");
       }
     }
-  }, []);
+  }, [isLoggedIn]);
+
+  const currentTrip = isLoggedIn ? tripState : null;
 
   const setCurrentTrip = (trip: Trip | null) => {
-    setCurrentTripState(trip);
+    setTripState(trip);
     if (trip) {
       localStorage.setItem("currentTrip", JSON.stringify(trip));
     } else {
