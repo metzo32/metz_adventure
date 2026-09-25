@@ -5,15 +5,15 @@ import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import AddIcon from "@mui/icons-material/Add";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
-import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
 import { Button } from "@/components/Button";
 import { PageContainer } from "@/components/PageContainer";
 import { TripCard } from "./_components/TripCard";
 import { CreateTripModal } from "./_components/CreateTripModal";
 import { JoinTripModal } from "./_components/JoinTripModal";
 import { fetchMyTrips } from "@/app/api/trips";
+import { NoData, Loading } from "./_components/Fallbacks";
 
-const Page = () => {
+export default function Page() {
   const { data: session } = useSession();
   const userId = (session?.user as { id?: string })?.id ?? "";
 
@@ -35,11 +35,13 @@ const Page = () => {
     <PageContainer>
       <div className="flex flex-col md:flex-row md::items-center justify-between mb-6">
         <h1 className="text-xl font-bold text-foreground">내 여행 목록</h1>
+
         <div className="flex gap-2 mt-4 md:mt-0">
           <Button onClick={handleJoinOpen} mode="light" className="flex max-md:flex-1 gap-2 items-center justify-center">
             <VpnKeyIcon sx={{ fontSize: 16 }} />
             <span>코드로 참여</span>
           </Button>
+
           <Button onClick={handleCreateOpen} mode="full" className="flex max-md:flex-1 gap-2 items-center justify-center">
             <AddIcon sx={{ fontSize: 16 }} />
             <span>여행 만들기</span>
@@ -48,13 +50,9 @@ const Page = () => {
       </div>
 
       {isLoading ? (
-        <div className="text-center py-16 text-text-secondary text-sm">불러오는 중...</div>
+        <Loading />
       ) : trips.length === 0 ? (
-        <div className="text-center py-16 flex flex-col items-center gap-3 bg-white rounded-2xl">
-          <FlightTakeoffIcon sx={{ fontSize: 48, color: "#CBD5E1" }} />
-          <p className="text-text-secondary text-sm">아직 참여한 여행이 없어요.</p>
-          <p className="text-text-secondary text-xs">새 여행을 만들거나 초대 코드로 참여해 보세요!</p>
-        </div>
+        <NoData />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {trips.map((trip) => (
@@ -69,4 +67,3 @@ const Page = () => {
   );
 };
 
-export default Page;

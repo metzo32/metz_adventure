@@ -42,6 +42,7 @@ export default function TransactionTable({ transactions, onDelete }: Transaction
             </tr>
           </thead>
           <tbody>
+            {transactions.length === 0 && <div></div>}
             {transactions.map((tx) => (
               <tr
                 key={tx.id}
