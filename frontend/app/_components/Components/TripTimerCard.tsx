@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useTripTimer } from "@/components/Time";
 import GradBox from "./GradBox";
-import dayjs from "dayjs";
+import dayjs from "dayjs"
 import type { Trip } from "@/app/trips/types";
 
 const PHASE_CONFIG = {

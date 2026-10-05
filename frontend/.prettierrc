@@ -1,8 +1,25 @@
 {
     "tabWidth": 4,
-    "singleQuote": true,
+    "singleQuote": false,
     "semi": true,
     "jsxSingleQuote": false,
     "trailingComma": "es5",
-    "printWidth": 100
+    "printWidth": 100,
+    "plugins": ["@trivago/prettier-plugin-sort-imports"],
+    "importOrder": [
+        "^react$",
+        "^react-dom(.*)$",
+        "^react/",
+        "^next(.*)$",
+        "^next-auth(.*)$",
+        "^react-hook-form(.*)$",
+        "<THIRD_PARTY_MODULES>",
+        "^@/hooks/(.*)$",
+        "^@/app/(.*)hooks(.*)$",
+        "^@/components/(.*)$",
+        "^@/(.*)$",
+        "^[.]{1,2}/"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
 }
