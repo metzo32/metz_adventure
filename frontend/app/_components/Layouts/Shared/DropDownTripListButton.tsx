@@ -13,9 +13,10 @@ import type { Trip } from "@/app/trips/types";
 
 type Props = {
     fullWidth?: boolean;
+    isOpen?: boolean;
 };
 
-const DropDownTripListButton = ({ fullWidth = false }: Props) => {
+const DropDownTripListButton = ({ fullWidth = false, isOpen = true }: Props) => {
     const { data: session } = useSession();
     const userId = (session?.user as { id?: string })?.id ?? "";
 
@@ -55,62 +56,68 @@ const DropDownTripListButton = ({ fullWidth = false }: Props) => {
         : "absolute top-full right-0 mt-1 w-52 bg-white border border-border rounded-lg shadow-lg z-50 max-h-52 overflow-y-auto";
 
     return (
-        <div className="relative" ref={dropdownRef}>
-            <button
-                onClick={onDropdownToggle}
-                className={buttonClassName}
-            >
-                {fullWidth ? (
-                    <div className="flex items-center gap-2 min-w-0">
-                        <FlightTakeoffIcon sx={{ fontSize: 16 }} className="text-primary shrink-0" />
-                        <span className="text-sm font-medium text-foreground truncate">
-                            {currentTrip?.name ?? "여행 선택"}
-                        </span>
-                    </div>
-                ) : (
-                    <>
-                        <FlightTakeoffIcon sx={{ fontSize: 16 }} className="text-primary shrink-0" />
-                        <span className="text-sm font-medium text-foreground max-w-36 truncate">
-                            {currentTrip?.name ?? "여행 선택"}
-                        </span>
-                    </>
-                )}
-                <ExpandMoreIcon
-                    sx={{ fontSize: 16 }}
-                    className={`text-text-secondary shrink-0 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
-                />
-            </button>
-
-            {dropdownOpen && (
-                <div className={dropdownClassName}>
-                    {trips.length === 0 ? (
-                        <p className="px-3 py-2 text-xs text-text-secondary">참여한 여행이 없어요</p>
+        isOpen ? (
+            <div className="relative" ref={dropdownRef}>
+                <button
+                    onClick={onDropdownToggle}
+                    className={buttonClassName}
+                >
+                    {fullWidth ? (
+                        <div className="flex items-center gap-2 min-w-0">
+                            <FlightTakeoffIcon sx={{ fontSize: 16 }} className="text-primary shrink-0" />
+                            <span className="text-sm font-medium text-foreground truncate">
+                                {currentTrip?.name ?? "여행 선택"}
+                            </span>
+                        </div>
                     ) : (
-                        trips.map((trip) => (
-                            <button
-                                key={trip.id}
-                                onClick={handleSelectTrip(trip)}
-                                className="w-full text-left px-3 py-2 text-sm hover:bg-lighter transition-colors flex items-center justify-between gap-2"
-                            >
-                                <span className="truncate">{trip.name}</span>
-                                {currentTrip?.id === trip.id && (
-                                    <CheckIcon sx={{ fontSize: 14 }} className="text-primary shrink-0" />
-                                )}
-                            </button>
-                        ))
+                        <>
+                            <FlightTakeoffIcon sx={{ fontSize: 16 }} className="text-primary shrink-0" />
+                            <span className="text-sm font-medium text-foreground max-w-36 truncate">
+                                {currentTrip?.name ?? "여행 선택"}
+                            </span>
+                        </>
                     )}
-                    <div className="border-t border-border">
-                        <Link
-                            href="/trips"
-                            onClick={onDropdownClose}
-                            className="block px-3 py-2 text-sm text-primary hover:bg-lighter transition-colors font-medium"
-                        >
-                            여행 관리 →
-                        </Link>
+                    <ExpandMoreIcon
+                        sx={{ fontSize: 16 }}
+                        className={`text-text-secondary shrink-0 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+                    />
+                </button>
+
+                {dropdownOpen && (
+                    <div className={dropdownClassName}>
+                        {trips.length === 0 ? (
+                            <p className="px-3 py-2 text-xs text-text-secondary">참여한 여행이 없어요</p>
+                        ) : (
+                            trips.map((trip) => (
+                                <button
+                                    key={trip.id}
+                                    onClick={handleSelectTrip(trip)}
+                                    className="w-full text-left px-3 py-2 text-sm hover:bg-lighter transition-colors flex items-center justify-between gap-2"
+                                >
+                                    <span className="truncate">{trip.name}</span>
+                                    {currentTrip?.id === trip.id && (
+                                        <CheckIcon sx={{ fontSize: 14 }} className="text-primary shrink-0" />
+                                    )}
+                                </button>
+                            ))
+                        )}
+                        <div className="border-t border-border">
+                            <Link
+                                href="/trips"
+                                onClick={onDropdownClose}
+                                className="block px-3 py-2 text-sm text-primary hover:bg-lighter transition-colors font-medium"
+                            >
+                                여행 관리 →
+                            </Link>
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+            </div>
+        ) : (
+            <Link href="/trips" className="flex justify-center py-2" title="여행 관리">
+                <FlightTakeoffIcon sx={{ fontSize: 20 }} className="text-primary" />
+            </Link>
+        )
     );
 };
 

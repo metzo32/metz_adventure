@@ -35,13 +35,7 @@ export default function Sidebar() {
 
             {/* 여행 선택기 */}
             <div className="px-2 py-3 border-b border-border">
-                {isOpen ? (
-                    <DropDownTripListButton fullWidth />
-                ) : (
-                    <Link href="/trips" className="flex justify-center py-2" title="여행 관리">
-                        <FlightTakeoffIcon sx={{ fontSize: 20 }} className="text-primary" />
-                    </Link>
-                )}
+                <DropDownTripListButton fullWidth isOpen={isOpen} />
             </div>
 
             {/* 네비게이션 메뉴 */}
