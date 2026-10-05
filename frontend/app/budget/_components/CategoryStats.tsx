@@ -76,7 +76,7 @@ export default function CategoryStats({ categoryStats, totalSpent }: CategorySta
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-center mb-0.5">
                     <span className="text-xs font-medium text-forground">{stat.name}</span>
-                    <span className="text-xs text-[#64748B]">{pct}%</span>
+                    <span className="text-xs text-text-secondary">{pct}%</span>
                   </div>
                   <div className="h-1 bg-slate-100 rounded-full overflow-hidden">
                     <div
@@ -93,9 +93,9 @@ export default function CategoryStats({ categoryStats, totalSpent }: CategorySta
           })}
       </div>
 
-      <div className="mt-4 pt-3 border-t border-[#E2E8F0] flex justify-between items-center">
-        <span className="text-sm text-[#64748B]">총 지출</span>
-        <span className="text-sm font-bold text-[#0832A4]">{formatKRW(totalSpent)}</span>
+      <div className="mt-4 pt-3 border-t border-border flex justify-between items-center">
+        <span className="text-sm text-text-secondary">총 지출</span>
+        <span className="text-sm font-bold text-primary]">{formatKRW(totalSpent)}</span>
       </div>
     </div>
   );
