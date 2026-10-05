@@ -25,7 +25,7 @@ export default function Sidebar() {
             className={`
                 hidden md:flex flex-col
                 sticky top-16 h-[calc(100vh-4rem)]
-                bg-white border-r border-slate-200
+                bg-white border-r border-border
                 transition-all duration-300 ease-in-out shrink-0
                 ${isOpen ? "w-56" : "w-16"}
             `}
@@ -34,7 +34,7 @@ export default function Sidebar() {
             <ToggleButton onToggleClick={onToggleClick} isOpen={isOpen} />
 
             {/* 여행 선택기 */}
-            <div className="px-2 py-3 border-b border-slate-200">
+            <div className="px-2 py-3 border-b border-border">
                 {isOpen ? (
                     <DropDownTripListButton fullWidth />
                 ) : (

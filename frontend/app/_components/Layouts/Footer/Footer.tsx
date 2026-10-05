@@ -2,7 +2,7 @@ import Image from "next/image"
 import logo from "@/public/icons/logo_primary.svg"
 export default function Footer() {
     return (
-        <footer className="border-t border-slate-200 bg-white">
+        <footer className="border-t border-border bg-white">
             <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Image src={logo} alt="logo" width={20} height={20} priority />

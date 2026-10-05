@@ -10,7 +10,7 @@ interface ToggleButtonProps {
 
 export default function ToggleButton({ onToggleClick, isOpen }: ToggleButtonProps) {
     return (
-        <div className="py-3 px-2 border-b border-slate-200">
+        <div className="py-3 px-2 border-b border-border">
             <Button onClick={onToggleClick} mode="nav" isOpen={isOpen}>
                 {isOpen ? (
                     <>

@@ -22,7 +22,7 @@ export default function BottomNav() {
     const pathname = usePathname();
 
     return (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 md:hidden">
+        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-border md:hidden">
             <ul className="flex items-center h-16">
                 {NAV_ITEMS.map((item) => {
                     const Icon = item.icon;

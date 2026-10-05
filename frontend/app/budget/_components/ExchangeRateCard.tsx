@@ -93,7 +93,7 @@ export default function ExchangeRateCard({
               </div>
               <button
                 onClick={handleToggleDirection}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-lighter text-xs font-medium text-primary hover:bg-slate-200 transition-colors cursor-pointer"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-lighter text-xs font-medium text-primary hover:bg-border transition-colors cursor-pointer"
               >
                 <SwapHorizIcon fontSize="small" />
                 {direction === "dest-to-krw"
