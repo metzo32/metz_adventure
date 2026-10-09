@@ -60,7 +60,6 @@ const Page = () => {
     }
 
     queryClient.clear();
-    localStorage.removeItem("currentTrip");
     router.push("/");
   };
 

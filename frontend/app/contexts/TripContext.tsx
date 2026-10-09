@@ -2,6 +2,9 @@
 
 import { createContext, useContext, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchMyTrips } from "@/app/api/trips";
+import { fetchLastTripId, updateLastTripId } from "@/app/api/auth";
 import type { Trip } from "@/app/trips/types";
 
 type TripContextType = {
@@ -14,31 +17,38 @@ const TripContext = createContext<TripContextType>({
   setCurrentTrip: () => { },
 });
 
-const loadTripFromStorage = (): Trip | null => {
-  if (typeof window === "undefined") return null;
-  const saved = localStorage.getItem("currentTrip");
-  if (!saved) return null;
-  try {
-    return JSON.parse(saved);
-  } catch {
-    localStorage.removeItem("currentTrip");
-    return null;
-  }
-};
-
 export const TripProvider = ({ children }: { children: React.ReactNode }) => {
-  const [tripState, setTripState] = useState<Trip | null>(loadTripFromStorage);
+  const [tripState, setTripState] = useState<Trip | null>(null);
   const { data: session } = useSession();
+  const userId = (session?.user as { id?: string })?.id ?? "";
   const isLoggedIn = !!session;
 
-  const currentTrip = isLoggedIn ? tripState : null;
+  const { data: trips = [] } = useQuery({
+    queryKey: ["trips", userId],
+    queryFn: () => fetchMyTrips(userId),
+    enabled: !!userId,
+  });
+
+  const { data: lastTripId } = useQuery({
+    queryKey: ["last-trip-id", userId],
+    queryFn: () => fetchLastTripId(userId),
+    enabled: !!userId,
+  });
+
+  const persistedTrip = lastTripId != null
+    ? (trips.find((t) => t.id === lastTripId) ?? null)
+    : null;
+
+  const mostRecentTrip = trips.length > 0
+    ? [...trips].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0]
+    : null;
+
+  const currentTrip = isLoggedIn ? (tripState ?? persistedTrip ?? mostRecentTrip) : null;
 
   const setCurrentTrip = (trip: Trip | null) => {
     setTripState(trip);
-    if (trip) {
-      localStorage.setItem("currentTrip", JSON.stringify(trip));
-    } else {
-      localStorage.removeItem("currentTrip");
+    if (trip && userId) {
+      updateLastTripId(userId, trip.id);
     }
   };
 

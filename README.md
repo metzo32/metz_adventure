@@ -3,6 +3,9 @@
 여행 계획 및 기록 서비스.  
 **Frontend** (Next.js) + **Backend** (Express.js + PostgreSQL) 구조로 이루어져 있습니다.
 
+URL
+`https://metz-adventure-olive.vercel.app/`
+
 ---
 
 ## 프로젝트 구조

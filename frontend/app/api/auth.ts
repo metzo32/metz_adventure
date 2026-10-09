@@ -20,3 +20,20 @@ export const registerUser = async (payload: RegisterPayload) => {
 
   return res.json();
 };
+
+export const fetchLastTripId = async (userId: string): Promise<number | null> => {
+  const res = await fetch(`${API_URL}/api/auth/me`, {
+    headers: { "x-user-id": userId },
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.last_trip_id ?? null;
+};
+
+export const updateLastTripId = async (userId: string, tripId: number): Promise<void> => {
+  await fetch(`${API_URL}/api/auth/last-trip`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", "x-user-id": userId },
+    body: JSON.stringify({ tripId }),
+  });
+};

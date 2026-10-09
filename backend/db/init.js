@@ -141,6 +141,9 @@ const createTables = async () => {
       created_at      TIMESTAMP DEFAULT NOW()
     );
   `);
+  await pool.query(`
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS last_trip_id INTEGER REFERENCES trips(id);
+  `);
   console.log('✅ DB 초기화 완료 (PostgreSQL)');
 };
 

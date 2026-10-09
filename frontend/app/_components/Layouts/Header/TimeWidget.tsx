@@ -11,8 +11,6 @@ export default function TimeWidget({ currentTrip }: Props) {
     const destTimezone = countryInfo?.timezone ?? "Asia/Bangkok";
     const times = useTimes(destTimezone);
 
-    console.log("times", times)
-
     const destLabel = currentTrip
         ? (currentTrip.city ? `${currentTrip.city}, ${currentTrip.country}` : currentTrip.country)
         : "온세상";
